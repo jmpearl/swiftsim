@@ -360,15 +360,15 @@ if __name__ == "__main__":
     XH = 1.0  # hydrogen mass fraction
     XHe = 0.0  # hydrogen mass fraction
     nH = 1e-3 * unyt.cm ** (-3)
-    rhoH = nH * unyt.proton_mass / XH
-    Mtot = rhoH * edgelen ** 3
+    rho_gas = nH * unyt.proton_mass / XH
+    Mtot = rho_gas * edgelen ** 3
     mpart = Mtot / xp.shape[0]
     mpart = mpart.to(cosmo_units["mass"])
     w.gas.masses = np.ones(xp.shape[0], dtype=np.float64) * mpart
     w.stars.masses = np.ones(xs.shape[0], dtype=np.float64) * mpart
 
     # get gas internal energy for a given temperature and composition
-    T = 10 * unyt.K
+    T = 100 * unyt.K
     XHI, XHII, XHeI, XHeII, XHeIII = get_mass_fractions(T, XH, XHe)
     mu = mean_molecular_weight(XHI, XHII, XHeI, XHeII, XHeIII)
     internal_energy = internal_energy(T, mu)
