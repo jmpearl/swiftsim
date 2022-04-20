@@ -53,7 +53,7 @@ try:
 except IndexError:
     plot_all = True
 
-snapshot_base = "output"
+snapshot_base = "output_HHe"
 
 
 def get_TT1Dsolution():

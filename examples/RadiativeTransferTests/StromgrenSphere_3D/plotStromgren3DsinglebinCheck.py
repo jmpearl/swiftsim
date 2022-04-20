@@ -64,7 +64,7 @@ try:
 except IndexError:
     plot_all = True
 
-snapshot_base = "output"
+snapshot_base = "output_singlebin"
 
 
 def get_snapshot_list(snapshot_basename="output"):

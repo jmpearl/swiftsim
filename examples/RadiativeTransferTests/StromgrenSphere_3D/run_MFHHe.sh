@@ -27,4 +27,4 @@ fi
 # Plot the photon propagation checks.
 # Make sure you set the correct photon group to plot
 # inside the script
-python3 ./plotStromgren3DMFHHeCheck.py
+python3 ./plotStromgren3DMFHHeCheck.py 100

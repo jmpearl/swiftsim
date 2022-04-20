@@ -19,7 +19,7 @@ TimeIntegration:
 
 # Parameters governing the snapshots
 Snapshots:
-  basename:            output # Common part of the name of output files
+  basename:            output_singlebin # Common part of the name of output files
   time_first:          0.     # Time of the first output (in internal units)
   delta_time:          0.001 # Time between snapshots
 
