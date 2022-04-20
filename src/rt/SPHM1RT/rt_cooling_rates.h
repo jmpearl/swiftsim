@@ -543,14 +543,10 @@ INLINE static void enforce_constraint_equations(
 
   metal_atomic_mass[rt_chemistry_element_He] = 4.0;
 
-  /* Initization */
+  /* Initialization */
   for (int spec = 0; spec < rt_species_count; spec++) {
     finish_abundances[spec] = fmax(abundances[spec], 0.0);
   }
-
-  /* check whether xHI bigger than one */
-  // if (finish_abundances[rt_sp_HI] > 1.01)
-  //  error("HI (=%e) fraction bigger than one", finish_abundances[rt_sp_HI]);
 
   /* enforce hydrogen species constraint */
   finish_abundances[rt_sp_HI] = fmax(finish_abundances[rt_sp_HI], 0.0);

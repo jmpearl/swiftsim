@@ -88,7 +88,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
   // TK remark: here we only consider the on-the-spot approximation
 
   /**************************/
-  /* INITIZATION            */
+  /* INITIALIZATION         */
   /**************************/
 
   int useparams = rt_props->useparams;

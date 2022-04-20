@@ -118,7 +118,7 @@ struct rt_props {
   /*! The cross section of ionizing photons for hydrogen (cgs) */
   double sigma_cross_cgs_H[RT_NGROUPS];
 
-  /*** end of useparams ***/
+  /*** end of useparams = 1 ***/
 
   /*! tolerance of relative change to shift from explicit solver to CVODE */
   double explicitRelTolerance;
