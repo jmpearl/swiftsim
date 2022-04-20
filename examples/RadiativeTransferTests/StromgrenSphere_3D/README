@@ -11,11 +11,22 @@ This directory contains two examples in one:
 
         There are a few variations:
     
-        - `run_singlebin.sh`: single-frequency-bin static fixed temperature Stromgren Sphere with pure hydrogen
+        - `run_singlebin.sh`: single-frequency-bin static fixed 
+        temperature Stromgren Sphere with pure hydrogen. This 
+        script will make use of `makeIC.py` and 
+        `plotStromgren3DsinglebinCheck.py`, plotting the neutral 
+        fraction against an analytic solution.
 
-        - `run_MF.sh`: multifrequency static variable temperature Stromgren Sphere with pure hydrogen
+        - `run_MF.sh`: multifrequency static variable temperature 
+        Stromgren Sphere with pure hydrogen. This script will make 
+        use of `makeIC.py` and `plotStromgren3DMFCheck.py`, comparing 
+        the neutral fraction and temperature with published solutions.
 
-        - `run_MFHHe.sh`: multifrequency static variable temperature Stromgren Sphere with hydrogen and helium
+        - `run_MFHHe.sh`: multifrequency static variable temperature 
+        Stromgren Sphere with hydrogen (75%) and helium (25%). This 
+        script will make use of `makeIC_HHe.py` and 
+        `plotStromgren3DMFHHeCheck.py`, comparing the neutral fraction 
+        and temperature with published solutions. 
 
 
     -   run a propagation test of photons emitted from a single 
@@ -30,18 +41,7 @@ Additional scripts:
         quantities (energies, fluxes). NOTE: you might need to change the
         'snapshot_base' variable at the top of the script depending on which
         solutions you want to plot.
-
-    -   `plotStromgren3DsinglebinCheck.py`: Plots the neutral fraction of a pure 
-        hydrogen Stromgren Sphere with the grey approximation (single-frequency-bin),
-        compared with an analytic solution
-
-    -   `plotStromgren3DMFCheck.py`: Plots the neutral fraction and temperature of a pure 
-        hydrogen Stromgren Sphere with three-frequency bins, compared
-        with published solutions.
-
-    -   `plotStromgren3DMFHHeCheck.py`: Plots the neutral fraction and temperature of a
-        hydrogen (75%) and helium (25%) Stromgren Sphere with three-frequency bins, compared
-        with published solutions.        
+             
 
 To use the GEAR RT model, compile with :
     --with-rt=GEAR_1 --with-rt-riemann-solver=GLF --with-hydro=gizmo-mfv --with-riemann-solver=hllc --with-stars=GEAR --with-feedback=none --with-grackle=$GRACKLE_ROOT
