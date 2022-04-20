@@ -41,7 +41,6 @@ InitialConditions:
 
 Stars:
   resolution_eta:       1.2348        # (Optional) Target smoothing length in units of the mean inter-particle separation (1.2348 == 48Ngbs with the cubic spline kernel). Defaults to the SPH value.
-  #resolution_eta:       3.2348        # (Optional) Target smoothing length in units of the mean inter-particle separation (1.2348 == 48Ngbs with the cubic spline kernel). Defaults to the SPH value.
 
 GEARRT:
     f_reduce_c: 0.01                                  # reduce the speed of light for the RT solver by multiplying c with this factor

@@ -193,7 +193,7 @@ __attribute__((always_inline)) INLINE static void
 rt_set_physical_radiation_opacity(struct part* p, const struct cosmology* cosmo,
                                   const float chi[RT_NGROUPS]) {
 
-  /* avoid getting negative timestep */
+  /* avoid getting negative time step */
   for (int g = 0; g < RT_NGROUPS; g++) {
     p->rt_data.params.chi[g] = max(chi[g], 0.f) * cosmo->a_inv * cosmo->a_inv;
   }
@@ -633,11 +633,6 @@ __attribute__((always_inline)) INLINE static void rt_finalise_transport(
 
   for (int g = 0; g < RT_NGROUPS; g++) {
     dfrac = -rpd->params.chi[g] * p->rho * rpd->params.cred;
-    // message("dfrac = %e", dfrac);
-    // message("rpd->params.chi[g] = %e", rpd->params.chi[g]);
-    // message("p->rho = %e", p->rho);
-    // message("rpd->params.cred = %e", rpd->params.cred);
-
     rpd->conserved[g].frad[0] *= expf(dfrac * dt);
     rpd->conserved[g].frad[1] *= expf(dfrac * dt);
     rpd->conserved[g].frad[2] *= expf(dfrac * dt);
@@ -703,14 +698,7 @@ void rt_tchem(struct part* restrict p, struct xpart* restrict xp,
 __attribute__((always_inline)) INLINE static void rt_kick_extra(
     struct part* p, float dt_therm, float dt_grav, float dt_hydro,
     float dt_kick_corr, const struct cosmology* cosmo,
-    const struct hydro_props* hydro_props) {
-  /* TK comment: I can use this to turn off dynamics */
-  /* zero out: p->u_dt (except Gadget2)
-   * xp->v_full?
-   *
-   *
-   */
-}
+    const struct hydro_props* hydro_props) {}
 
 /**
  * @brief Prepare a particle for the !HYDRO! force calculation.

@@ -352,7 +352,6 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
      * Use implicit solver.               *
      **************************************/
     realtype reltol, t;
-    // realtype abstol_scalar;
     N_Vector abstol_vector, y;
 
     int maxsteps = 100000;
@@ -390,7 +389,6 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
     /* Set up the solver */
     /* Set the tolerances*/
     reltol = (realtype)rt_props->relativeTolerance;
-    // abstol_scalar = (realtype)rt_props->absoluteTolerance;
 
     /* Use CVodeCreate to create the solver
      * memory and specify the Backward Differentiation
@@ -398,8 +396,6 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
      * iteration by default, so no need to specify this. */
     void* cvode_mem;
     cvode_mem = CVodeCreate(CV_BDF);
-    // cvode_mem = CVodeCreate(CV_BDF, CV_NEWTON);
-    // data.cvode_mem = cvode_mem;
 
     /* Set the user data for CVode */
     CVodeSetUserData(cvode_mem, &data);
@@ -409,7 +405,6 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
     CVodeSetMaxNumSteps(cvode_mem, maxsteps);
 
     /* Set the error handler function. */
-    // CVodeSetErrHandlerFn(cvode_mem, chimes_err_handler_fn, &data);
 
     /* Use CVodeInit to initialise the integrator
      * memory and specify the right hand side

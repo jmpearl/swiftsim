@@ -20,6 +20,7 @@
 
 # ---------------------------------------------------------------------
 # Add a single star in the center of a glass distribution
+# The gas is set up with pure hydrogen gas.
 # ---------------------------------------------------------------------
 
 from swiftsimio import Writer
@@ -358,7 +359,7 @@ if __name__ == "__main__":
 
     # get gas masses
     XH = 1.0  # hydrogen mass fraction
-    XHe = 0.0  # hydrogen mass fraction
+    XHe = 0.0  # helium mass fraction
     nH = 1e-3 * unyt.cm ** (-3)
     rho_gas = nH * unyt.proton_mass / XH
     Mtot = rho_gas * edgelen ** 3

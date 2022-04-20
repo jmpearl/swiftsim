@@ -45,7 +45,7 @@
 __attribute__((always_inline)) INLINE static void
 runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
                                      const float hi, const float hj,
-                                     struct spart *si, struct part *pj,
+                                     struct spart *si, const struct part *pj,
                                      const struct cosmology *cosmo,
                                      const struct rt_props *rt_props) {
 
@@ -437,7 +437,6 @@ __attribute__((always_inline)) INLINE static void radiation_force_loop_function(
   float rhomean2;
   float fradi[3], fradj[3];
   double fradidouble[3], fradjdouble[3];
-  // float graduci[3], graducj[3];
   float divfipar, divfjpar; /* divfipar is inside the loop, and divfi is summed
                                over particle */
   float divfi, divfj;

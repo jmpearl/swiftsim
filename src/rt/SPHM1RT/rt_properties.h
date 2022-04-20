@@ -378,7 +378,7 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
   /* 1: apply on the spot approixmation; 0: turn it off. */
   rtp->onthespot = parser_get_opt_param_int(params, "SPHM1RT:onthespot", 1);
 
-  /* 1: not changing photon density in thermochemistry; 0: evolute photon
+  /* 1: not changing photon density in thermochemistry; 0: evolve photon
    * density. */
   rtp->fixphotondensity =
       parser_get_opt_param_int(params, "SPHM1RT:fixphotondensity", 0);
