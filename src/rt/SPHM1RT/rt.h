@@ -257,6 +257,7 @@ __attribute__((always_inline)) INLINE static void rt_reset_part(
 /**
  * @brief First initialisation of the RT hydro particle data.
  * @param p particle to work on
+ * @param rt_props RT properties struct 
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_part(
     struct part* restrict p, const struct rt_props* restrict rt_props) {
@@ -327,6 +328,7 @@ __attribute__((always_inline)) INLINE static void rt_reset_spart(
 
 /**
  * @brief First initialisation of the RT star particle data.
+ * @param sp star particle to work on 
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_spart(
     struct spart* restrict sp) {
@@ -389,7 +391,7 @@ __attribute__((always_inline)) INLINE static void rt_spart_has_no_neighbours(
  * @brief Do checks/conversions on particles on startup.
  *
  * @param p The particle to work on
- * @param rtp The RT properties struct
+ * @param rt_props The RT properties struct
  * @param phys_const physical constants struct
  * @param us unit_system struct
  * @param cosmo cosmology struct
@@ -421,12 +423,13 @@ __attribute__((always_inline)) INLINE static void rt_convert_quantities(
  * of a given particle (during timestep tasks)
  *
  * @param p Particle to work on.
+ * @param xp Pointer to the particle' extended data.
  * @param rt_props RT properties struct
  * @param cosmo The current cosmological model.
  * @param hydro_props The #hydro_props.
  * @param phys_const The physical constants in internal units.
  * @param us The internal system of units.
- * @param dt The time-step of this particle.
+ * @return dt The time-step of this particle.
  */
 __attribute__((always_inline)) INLINE static float rt_compute_timestep(
     const struct part* restrict p, const struct xpart* restrict xp,
@@ -448,6 +451,8 @@ __attribute__((always_inline)) INLINE static float rt_compute_timestep(
  * @param sp spart to work on
  * @param rt_props the RT properties struct
  * @param cosmo the cosmology
+ * 
+ * @return star time step
  */
 __attribute__((always_inline)) INLINE static float rt_compute_spart_timestep(
     const struct spart* restrict sp, const struct rt_props* restrict rt_props,
@@ -738,7 +743,7 @@ __attribute__((always_inline)) INLINE static void rt_clean(
     struct rt_props* props, int restart) {}
 
 /**
- * @brief Defines the right-hand side function.
+ * @brief Defines the right-hand side of the system of differential equations (dy/dt = ydot).
  *
  * Defines the system of differential equations that make
  * up the right-hand side function, which will be integrated

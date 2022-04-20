@@ -60,7 +60,7 @@
 #include <time.h>
 
 /**
- * @brief Defines the right-hand side function.
+ * @brief Defines the right-hand side of the system of differential equations (dy/dt = ydot).
  *
  * Defines the system of differential equations that make
  * up the right-hand side function, which will be integrated
