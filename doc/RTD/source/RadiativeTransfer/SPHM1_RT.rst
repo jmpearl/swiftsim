@@ -25,12 +25,14 @@ Compiling for SPHM1-RT
 -   SPHM1-RT is compatible with any SPH scheme. You'll
     need to compile using ``--with-hydro=sphenix`` or other SPH schemes, e.g. we have tested gadget2, minimal, and sphenix.
 
--   SPHM1-RT solves non-equilibrium with the `SUNDIALS <https://computing.llnl.gov/projects/sundials>' library, 
+-   SPHM1-RT solves non-equilibrium with the `SUNDIALS <https://computing.llnl.gov/projects/sundials>` library, 
     which is SUite of Nonlinear and DIfferential/ALgebraic Equation Solvers. The SUNDIALS version has to be  5 . 
     You'll need to compile using ``--with-sundials=$SUNDIALS_ROOT``    
     SUNDIALS_ROOT is the root directory that contains the lib and include directories, e.g. on cosma:
     SUNDIALS_ROOT=/cosma/local/sundials/5.1.0/
-    IMPORTANT: Need SUNDIALS version  = 5 . 
+    (IMPORTANT: Need SUNDIALS version  = 5). 
+    The instructions of installing Sundials can be found, e.g., in this `website 
+    <https://richings.bitbucket.io/chimes/user_guide/GettingStarted/sundials.html>`.
 
 
 
