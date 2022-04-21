@@ -193,7 +193,7 @@ __attribute__((always_inline)) INLINE static void
 rt_set_physical_radiation_opacity(struct part* p, const struct cosmology* cosmo,
                                   const float chi[RT_NGROUPS]) {
 
-  /* avoid getting negative time step */
+  /* avoid getting negative opacity */
   for (int g = 0; g < RT_NGROUPS; g++) {
     p->rt_data.params.chi[g] = max(chi[g], 0.f) * cosmo->a_inv * cosmo->a_inv;
   }
