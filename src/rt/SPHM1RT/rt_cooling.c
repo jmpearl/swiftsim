@@ -30,6 +30,15 @@
 #include <hdf5.h>
 #include <math.h>
 #include <time.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <cvode/cvode.h>
+#include <cvode/cvode_direct.h> /* access to CVDls interface            */
+#include <sunlinsol/sunlinsol_dense.h>
+#include <sunmatrix/sunmatrix_dense.h>
+
+
 
 /* Local includes. */
 #include "active.h"
