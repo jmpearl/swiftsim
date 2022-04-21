@@ -31,7 +31,8 @@ Compiling for SPHM1-RT
     SUNDIALS_ROOT is the root directory that contains the lib and include directories, e.g. on cosma:
     SUNDIALS_ROOT=/cosma/local/sundials/5.1.0/
     (IMPORTANT: Need SUNDIALS version  = 5). 
-    The instructions of installing Sundials can be found, e.g., in this `website 
+    The instructions of installing Sundials can be found, e.g., 
+    `here <https://sundials.readthedocs.io/en/latest/Install_link.html>` or in this `website 
     <https://richings.bitbucket.io/chimes/user_guide/GettingStarted/sundials.html>`.
 
 

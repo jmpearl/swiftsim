@@ -139,9 +139,9 @@ rt_get_physical_frad_multifrequency(const struct part* restrict p,
                                     float fradtemp[RT_NGROUPS][3]) {
 
   for (int g = 0; g < RT_NGROUPS; g++) {
-    fradtemp[g][0] = p->rt_data.conserved[g].frad[0];
-    fradtemp[g][1] = p->rt_data.conserved[g].frad[1];
-    fradtemp[g][2] = p->rt_data.conserved[g].frad[2];
+    fradtemp[g][0] = p->rt_data.conserved[g].frad[0] * cosmo->a;
+    fradtemp[g][1] = p->rt_data.conserved[g].frad[1] * cosmo->a;
+    fradtemp[g][2] = p->rt_data.conserved[g].frad[2] * cosmo->a;
   }
 }
 
@@ -176,9 +176,9 @@ rt_set_physical_radiation_flux_multifrequency(struct part* p,
                                               const struct cosmology* cosmo,
                                               float frad[RT_NGROUPS][3]) {
   for (int g = 0; g < RT_NGROUPS; g++) {
-    p->rt_data.conserved[g].frad[0] = frad[g][0];
-    p->rt_data.conserved[g].frad[1] = frad[g][1];
-    p->rt_data.conserved[g].frad[2] = frad[g][2];
+    p->rt_data.conserved[g].frad[0] = frad[g][0] * cosmo->a_inv;
+    p->rt_data.conserved[g].frad[1] = frad[g][1] * cosmo->a_inv;
+    p->rt_data.conserved[g].frad[2] = frad[g][2] * cosmo->a_inv;
   }
 }
 
