@@ -184,7 +184,7 @@ rt_get_physical_frad_multifrequency(const struct part* restrict p,
  */
 __attribute__((always_inline)) INLINE static void
 rt_set_comoving_frad_multifrequency(struct part* p,
-                                    const float frad[RT_NGROUPS][3]) {
+                                    float frad[RT_NGROUPS][3]) {
   for (int g = 0; g < RT_NGROUPS; g++) {
     p->rt_data.conserved[g].frad[0] = frad[g][0];
     p->rt_data.conserved[g].frad[1] = frad[g][1];

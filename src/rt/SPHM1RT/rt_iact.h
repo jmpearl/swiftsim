@@ -80,7 +80,7 @@ runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
   if (rt_props->reinject) {
     if (rhoj != 0.f) {
       float urad[RT_NGROUPS];
-      rt_get_physical_urad_multifrequency(p, cosmo, urad);
+      rt_get_physical_urad_multifrequency(pj, cosmo, urad);
       for (int g = 0; g < RT_NGROUPS; g++) {
         si->rt_data.emission_reinject[g] += mj * urad[g];
       }
@@ -146,7 +146,7 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
   float new_urad, new_frad;
   float urad[RT_NGROUPS];
   float frad[RT_NGROUPS][3];
-  const float cred = rt_get_physical_cred(p,cosmo);
+  const float cred = rt_get_comoving_cred(pj);
   for (int g = 0; g < RT_NGROUPS; g++) {
     /* Inject energy. */
     if (pj->rt_data.params.reinject) {
@@ -159,7 +159,6 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
                  pj->rt_data.conserved[g].urad;
     }
 
-    /* note that urad, frad, and cred are physical */
     urad[g] = new_urad;
 
     /* Inject flux. */
@@ -170,8 +169,8 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
     frad[g][2] = new_frad * n_unit[2];
   }
 
-  rt_set_physical_urad_multifrequency(p,cosmo,urad);
-  rt_set_physical_radiation_flux_multifrequency(p, cosmo, frad);
+  rt_set_comoving_urad_multifrequency(pj,urad);
+  rt_set_comoving_frad_multifrequency(pj,frad);
 
 }
 
