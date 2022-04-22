@@ -42,8 +42,7 @@
  * @return comoving reduced speed of light
  */
 __attribute__((always_inline)) INLINE static float
-rt_get_comoving_radiation_cred(
-    const struct part* restrict p) {
+rt_get_comoving_cred(const struct part* restrict p) {
   return p->rt_data.params.cred;
 }
 
@@ -58,8 +57,7 @@ rt_get_comoving_radiation_cred(
  * 
  */
 __attribute__((always_inline)) INLINE static float
-rt_get_physical_radiation_cred(
-    const struct part* restrict p, const struct cosmology *cosmo) {
+rt_get_physical_cred(const struct part* restrict p, const struct cosmology *cosmo) {
   return p->rt_data.params.cred * cosmo->a;
 }
 
@@ -304,6 +302,7 @@ __attribute__((always_inline)) INLINE static void rt_first_init_part(
 
   /* We can get parameters for diffusion (force loop) */
 
+  /* TK reminder: still need to convert from physical to comoving */
   rpd->params.cred = rt_props->cred;
 
   rpd->params.reinject = rt_props->reinject;
@@ -469,7 +468,7 @@ __attribute__((always_inline)) INLINE static float rt_compute_timestep(
     const struct phys_const* restrict phys_const,
     const struct unit_system* restrict us) {
 
-  float cred_phys = rt_get_physical_radiation_cred(p,cosmo);
+  float cred_phys = rt_get_physical_cred(p,cosmo);
   float dt = p->h * cosmo->a / (cred_phys + FLT_MIN) *
              rt_props->CFL_condition;
 

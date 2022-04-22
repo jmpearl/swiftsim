@@ -131,7 +131,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
                          units_cgs_conversion_factor(us, UNIT_CONV_TEMPERATURE);
   data.k_B_cgs = k_B_cgs;
 
-  const double cred = rt_get_physical_radiation_cred(p,cosmo);
+  const double cred = rt_get_physical_cred(p,cosmo);
   const double cred_cgs =
       cred * units_cgs_conversion_factor(us, UNIT_CONV_VELOCITY);
   data.cred_cgs = cred_cgs;

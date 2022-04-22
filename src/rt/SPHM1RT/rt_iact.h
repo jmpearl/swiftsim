@@ -79,8 +79,10 @@ runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
   /* we need it only when we need to redistribute the radiation energy */
   if (rt_props->reinject) {
     if (rhoj != 0.f) {
+      float urad[RT_NGROUPS];
+      rt_get_physical_urad_multifrequency(p, cosmo, urad);
       for (int g = 0; g < RT_NGROUPS; g++) {
-        si->rt_data.emission_reinject[g] += mj * pj->rt_data.conserved[g].urad;
+        si->rt_data.emission_reinject[g] += mj * urad[g];
       }
     }
   }
@@ -142,6 +144,9 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
   }
 
   float new_urad, new_frad;
+  float urad[RT_NGROUPS];
+  float frad[RT_NGROUPS][3];
+  const float cred = rt_get_physical_cred(p,cosmo);
   for (int g = 0; g < RT_NGROUPS; g++) {
     /* Inject energy. */
     if (pj->rt_data.params.reinject) {
@@ -154,15 +159,20 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
                  pj->rt_data.conserved[g].urad;
     }
 
-    pj->rt_data.conserved[g].urad = new_urad;
+    /* note that urad, frad, and cred are physical */
+    urad[g] = new_urad;
 
     /* Inject flux. */
     /* We assume the path from the star to the gas is optically thin */
-    new_frad = new_urad * pj->rt_data.params.cred;
-    pj->rt_data.conserved[g].frad[0] = new_frad * n_unit[0];
-    pj->rt_data.conserved[g].frad[1] = new_frad * n_unit[1];
-    pj->rt_data.conserved[g].frad[2] = new_frad * n_unit[2];
+    new_frad = new_urad * cred;
+    frad[g][0] = new_frad * n_unit[0];
+    frad[g][1] = new_frad * n_unit[1];
+    frad[g][2] = new_frad * n_unit[2];
   }
+
+  rt_set_physical_urad_multifrequency(p,cosmo,urad);
+  rt_set_physical_radiation_flux_multifrequency(p, cosmo, frad);
+
 }
 
 /**
@@ -222,8 +232,8 @@ radiation_gradient_loop_function(float r2, const float *dx, float hi, float hj,
   float uradmfi[RT_NGROUPS];
   float uradmfj[RT_NGROUPS];
 
-  const float credi = rt_get_comoving_radiation_cred(pi);
-  const float credj = rt_get_comoving_radiation_cred(pj);
+  const float credi = rt_get_comoving_cred(pi);
+  const float credj = rt_get_comoving_cred(pj);
 
   /* use urad * c instead */
   float uradci;
@@ -384,8 +394,8 @@ __attribute__((always_inline)) INLINE static void radiation_force_loop_function(
   float uradmfi[RT_NGROUPS];
   float uradmfj[RT_NGROUPS];
 
-  const float credi = rt_get_comoving_radiation_cred(pi);
-  const float credj = rt_get_comoving_radiation_cred(pj);
+  const float credi = rt_get_comoving_cred(pi);
+  const float credj = rt_get_comoving_cred(pj);
 
   float fradmfi[RT_NGROUPS][3];
   float fradmfj[RT_NGROUPS][3];
