@@ -34,6 +34,37 @@
  * SPHM1RT method described in Chan+21: 2102.08404
  */
 
+
+/**
+ * @brief Returns the comoving radiation speed of a particle
+ *
+ * @param p Pointer to the particle data.
+ * @return comoving reduced speed of light
+ */
+__attribute__((always_inline)) INLINE static float
+rt_get_comoving_radiation_cred(
+    const struct part* restrict p) {
+  return p->rt_data.params.cred;
+}
+
+
+
+/**
+ * @brief Returns the physical radiation speed of a particle
+ *
+ * @param p Pointer to the particle data.
+ * @param cosmo Cosmology data structure.
+ * @return physical reduced speed of light
+ * 
+ */
+__attribute__((always_inline)) INLINE static float
+rt_get_physical_radiation_cred(
+    const struct part* restrict p, const struct cosmology *cosmo) {
+  return p->rt_data.params.cred * cosmo->a;
+}
+
+
+
 /**
  * @brief Returns the comoving radiation energy per mass of a particle
  * (note that the comoving and physical energy per mass are the same in our
@@ -438,7 +469,8 @@ __attribute__((always_inline)) INLINE static float rt_compute_timestep(
     const struct phys_const* restrict phys_const,
     const struct unit_system* restrict us) {
 
-  float dt = p->h * cosmo->a / (p->rt_data.params.cred + FLT_MIN) *
+  float cred_phys = rt_get_physical_radiation_cred(p,cosmo);
+  float dt = p->h * cosmo->a / (cred_phys + FLT_MIN) *
              rt_props->CFL_condition;
 
   return dt;

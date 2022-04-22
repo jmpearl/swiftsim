@@ -222,8 +222,8 @@ radiation_gradient_loop_function(float r2, const float *dx, float hi, float hj,
   float uradmfi[RT_NGROUPS];
   float uradmfj[RT_NGROUPS];
 
-  const float credi = rpi->params.cred;
-  const float credj = rpj->params.cred;
+  const float credi = rt_get_comoving_radiation_cred(pi);
+  const float credj = rt_get_comoving_radiation_cred(pj);
 
   /* use urad * c instead */
   float uradci;
@@ -384,8 +384,8 @@ __attribute__((always_inline)) INLINE static void radiation_force_loop_function(
   float uradmfi[RT_NGROUPS];
   float uradmfj[RT_NGROUPS];
 
-  const float credi = rpi->params.cred;
-  const float credj = rpj->params.cred;
+  const float credi = rt_get_comoving_radiation_cred(pi);
+  const float credj = rt_get_comoving_radiation_cred(pj);
 
   float fradmfi[RT_NGROUPS][3];
   float fradmfj[RT_NGROUPS][3];
