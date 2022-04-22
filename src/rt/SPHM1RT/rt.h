@@ -302,7 +302,6 @@ __attribute__((always_inline)) INLINE static void rt_first_init_part(
 
   /* We can get parameters for diffusion (force loop) */
 
-  /* TK reminder: still need to convert from physical to comoving */
   rpd->params.cred = rt_props->cred;
 
   rpd->params.reinject = rt_props->reinject;

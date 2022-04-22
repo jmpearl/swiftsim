@@ -247,7 +247,10 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
 
   /* get reduced speed of light in code unit */
   const float cred = parser_get_param_float(params, "SPHM1RT:cred");
-  rtp->cred = cred;
+
+  /* TK reminder: I have converted cred to comoving at the first time-step */
+  /* TODO: need to update it every time-step */
+  rtp->cred = cred * cosmo->a_inv;
 
   /* get initial opacity in code unit */
   int errorint = parser_get_opt_param_float_array(params, "SPHM1RT:chi",
