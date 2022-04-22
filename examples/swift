@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#  Run the swift binary from the new home.
+scriptdir=$(dirname $0)
+exec=$scriptdir/../src/swift
+result=0
+if test -x $exec; then
+   $exec $*
+else
+   echo "no swift executable located in ../src"
+   result=1
+fi
+exit $result

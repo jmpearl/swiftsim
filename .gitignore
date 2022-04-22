@@ -15,6 +15,10 @@ libtool
 build
 
 src/version_string.h
+src/swift
+src/swift_mpi
+src/fof
+src/fof_mpi
 swift*.tar.gz
 
 doc/doxyfile.stamp
@@ -23,10 +27,6 @@ doc/latex/
 doc/man/
 doc/Doxyfile
 
-examples/swift
-examples/swift_mpi
-examples/fof
-examples/fof_mpi
 examples/*/*/*.xmf
 examples/*/*/*.dat
 examples/*/*/*.png

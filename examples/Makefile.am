@@ -69,3 +69,6 @@ EXTRA_DIST = Cooling/CoolingBox/coolingBox.yml Cooling/CoolingBox/plotEnergy.py 
 
 # Default parameter file
 EXTRA_DIST += parameter_example.yml
+
+# Scripts to point at swift binaries in new home.
+EXTRA_DIST += swift swift_mpi

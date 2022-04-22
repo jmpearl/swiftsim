@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#  Run the swift_mpi binary from the new home.
+scriptdir=$(dirname $0)
+exec=$scriptdir/../src/swift_mpi
+result=0
+if test -x $exec; then
+   $exec $*
+else
+   echo "no swift_mpi executable located in ../src"
+   result=1
+fi
+exit $result
