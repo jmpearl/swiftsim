@@ -250,6 +250,7 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
 
   /* TK reminder: I have converted cred to comoving at the first time-step */
   /* TODO: need to update it every time-step */
+  /* Note: the ionizing rate is NOT correct until we update it every time-step */
   rtp->cred = cred * cosmo->a_inv;
 
   /* get initial opacity in code unit */
