@@ -565,4 +565,8 @@ void rt_tchem(struct part* restrict p, struct xpart* restrict xp,
               const struct unit_system* restrict us, const double dt) {
   rt_do_thermochemistry(p, xp, rt_props, cosmo, hydro_props, phys_const, us,
                         dt);
+
+  /* update the comoving reduced speed of light after thermo-chemistry */                     
+  p->rt_data.params.cred = rt_props->cred * cosmo->a_inv;
+
 }
