@@ -36,8 +36,11 @@ struct rt_props {
   /* CFL condition */
   float CFL_condition;
 
-  /* reduced speed of light in code unit */
-  float cred;
+  /* reduced speed of light in code unit (physical) */
+  float cred_phys;
+  
+  /* reduced speed of light in code unit (comoving) */
+  float cred_comoving;  
 
   /*! initial opacity */
   float initialchi[RT_NGROUPS];
@@ -245,11 +248,13 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
     error("SPHM1RT can't run without constant stellar emission rates for now.");
   }
 
-  /* get reduced speed of light in code unit */
-  const float cred = parser_get_param_float(params, "SPHM1RT:cred");
+  /* get reduced speed of light in code unit (physical) */
+  const float cred_phys = parser_get_param_float(params, "SPHM1RT:cred");
 
-  /* TK reminder: rtp->cred is physical */
-  rtp->cred = cred;
+  /* TK reminder: rtp->cred_phys is physical */
+  rtp->cred_phys = cred_phys;
+  /* TK reminder: rtp->cred_comoving is comoving (valid only in the first step) */  
+  rtp->cred_comoving = cred_phys * cosmo->a_inv;  
 
   /* get initial opacity in code unit */
   int errorint = parser_get_opt_param_float_array(params, "SPHM1RT:chi",

@@ -105,6 +105,9 @@ struct rt_part_data {
     /*! reduced speed of light */
     float cred;
 
+    /*! reduced speed of light (physical) */
+    float cred_phys;    
+
     /*! switch to reinject radiation from injection radius */
     int reinject;
 

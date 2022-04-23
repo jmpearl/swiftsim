@@ -302,7 +302,7 @@ __attribute__((always_inline)) INLINE static void rt_first_init_part(
 
   /* We can get parameters for diffusion (force loop) */
 
-  rpd->params.cred = rt_props->cred;
+  rpd->params.cred = rt_props->cred_comoving;
 
   rpd->params.reinject = rt_props->reinject;
 
@@ -442,9 +442,9 @@ __attribute__((always_inline)) INLINE static void rt_convert_quantities(
     rpd->conserved[g].frad[1] = rpd->conserved[g].frad[1] / p->mass;
     rpd->conserved[g].frad[2] = rpd->conserved[g].frad[2] / p->mass;
   }
-  
-  /* rpd->cred is in comoving; rt_props->cred is physical */
-  rpd->params.cred = rt_props->cred * cosmo->a_inv;
+
+  /* rpd->cred is in comoving; rt_props->cred_phys is physical */
+  rpd->params.cred = rt_props->cred_phys * cosmo->a_inv;
 
   /* Initialize element mass fractions accoridng to parameter files. */
   rt_tchem_first_init_part(p, rt_props, phys_const, us, cosmo);
