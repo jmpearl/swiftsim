@@ -313,7 +313,7 @@ INLINE static void rt_write_flavour(hid_t h_grp, hid_t h_grp_columns,
   hid_t dset_cred =
       H5Dcreate(h_grp, "ReducedLightspeed", type_float, space_cred, H5P_DEFAULT,
                 H5P_DEFAULT, H5P_DEFAULT);
-  H5Dwrite(dset_cred, type_float, H5S_ALL, H5S_ALL, H5P_DEFAULT, &rtp->cred);
+  H5Dwrite(dset_cred, type_float, H5S_ALL, H5S_ALL, H5P_DEFAULT, &rtp->cred_phys);
 
   /* Write unit conversion factors for this data set */
   char buffer_cred[FIELD_BUFFER_SIZE] = {0};
