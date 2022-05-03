@@ -2793,6 +2793,8 @@ AM_CONDITIONAL([HAVE_GRAVITY_MULTISOFTENING], [test "$with_gravity" = "with-mult
 # Check if using SPHM1RT radiative transfer
 AM_CONDITIONAL([HAVESPHM1RTRT], [test "${with_rt:0:7}" = "SPHM1RT"])
 
+# Check if using GEAR-RT radiative transfer
+AM_CONDITIONAL([HAVEGEARRT], [test "${with_rt:0:4}" = "GEAR"])
 
 
 
@@ -2886,7 +2888,7 @@ AC_MSG_RESULT([
    Star feedback model  : $with_feedback_name
    Sink particle model  : $with_sink
    Black holes model    : $with_black_holes
-   Radiative transfer   : $with_rt$rt_extra_msg
+   Radiative transfer   : $with_rt
    Extra i/o            : $with_extra_io
    
    Atomic operations in tasks  : $enable_atomics_within_tasks

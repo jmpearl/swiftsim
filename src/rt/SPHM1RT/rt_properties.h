@@ -20,13 +20,16 @@
 #ifndef SWIFT_RT_PROPERTIES_SPHM1RT_H
 #define SWIFT_RT_PROPERTIES_SPHM1RT_H
 
-#include "rt_parameters.h"
+#include "hydro.h"
+#include "rt_species_and_elements.h"
 
 /**
  * @file src/rt/SPHM1RT/rt_properties.h
  * @brief Main header file for the 'SPHM1RT' radiative transfer scheme
  * properties. SPHM1RT method described in Chan+21: 2102.08404
  */
+
+#define RT_IMPLEMENTATION "SPH M1closure"
 
 /**
  * @brief Properties of the 'SPHM1RT' radiative transfer model
@@ -38,9 +41,9 @@ struct rt_props {
 
   /* reduced speed of light in code unit (physical) */
   float cred_phys;
-  
+
   /* reduced speed of light in code unit (comoving) */
-  float cred_comoving;  
+  float cred_comoving;
 
   /*! initial opacity */
   float initialchi[RT_NGROUPS];
@@ -134,30 +137,6 @@ struct rt_props {
 };
 
 /**
- * @brief Return a string containing the name of a given #rt_cooling_species.
- */
-__attribute__((always_inline)) INLINE static const char* rt_get_species_name(
-    enum rt_cooling_species spec) {
-
-  static const char* rt_cooling_species_names[rt_species_count] = {
-      "e", "HI", "HII", "HeI", "HeII", "HeIII"};
-
-  return rt_cooling_species_names[spec];
-}
-
-/**
- * @brief Return a string containing the name of a given #rt_chemistry_element.
- */
-__attribute__((always_inline)) INLINE static const char*
-rt_chemistry_get_element_name(enum rt_chemistry_element elem) {
-
-  static const char* rt_chemistry_element_names[rt_chemistry_element_count] = {
-      "Hydrogen", "Helium"};
-
-  return rt_chemistry_element_names[elem];
-}
-
-/**
  * @brief Print the RT model.
  *
  * @param rtp The #rt_props
@@ -168,7 +147,7 @@ __attribute__((always_inline)) INLINE static void rt_props_print(
   /* Only the master print */
   if (engine_rank != 0) return;
 
-  message("Radiative transfer scheme: '%s'", "SPH M1closure");
+  message("Radiative transfer scheme: '%s'", RT_IMPLEMENTATION);
 
   char messagestring[200] = "Using photon frequency bins: [0.";
   char freqstring[20];
@@ -253,8 +232,9 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
 
   /* TK reminder: rtp->cred_phys is physical */
   rtp->cred_phys = cred_phys;
-  /* TK reminder: rtp->cred_comoving is comoving (valid only in the first step) */  
-  rtp->cred_comoving = cred_phys * cosmo->a_inv;  
+  /* TK reminder: rtp->cred_comoving is comoving (valid only in the first step)
+   */
+  rtp->cred_comoving = cred_phys * cosmo->a_inv;
 
   /* get initial opacity in code unit */
   int errorint = parser_get_opt_param_float_array(params, "SPHM1RT:chi",

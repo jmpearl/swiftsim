@@ -19,13 +19,69 @@
 #ifndef SWIFT_RT_SPHM1RT_COOLING_RATES_H
 #define SWIFT_RT_SPHM1RT_COOLING_RATES_H
 
-#include "rt_properties.h"
-#include "rt_struct.h"
-
 /* Local includes. */
+#include "error.h"
+#include "rt_species_and_elements.h"
+
+#include <math.h>
 #include <nvector/nvector_serial.h>
 #include <sundials/sundials_types.h>
 
+struct UserData {
+
+  // void *cvode_mem;           /*!< Pointer to the CVODE memory. */
+
+  /* switch for on the spot approximation */
+  int onthespot;
+
+  /* switch for gas cooling */
+  int coolingon;
+
+  /* switch for not changing photon density */
+  int fixphotondensity;
+
+  /* 1: to use the input parameters; 0: calculate with temperature. */
+  /* (H coefficient only; no heating or cooling) */
+  int useparams;
+
+  /*! Fraction of the particle mass in a given element */
+  double metal_mass_fraction[rt_chemistry_element_count];
+
+  double m_H_cgs;
+
+  double k_B_cgs;
+
+  double cred_cgs;
+
+  double rho_cgs;
+
+  double n_H_cgs;
+
+  double ngamma_cgs[3];
+
+  double u_cgs;
+
+  /*! abundances of species i, i.e. n_i/nH */
+  /* note that we use hydrogen density in the denominator */
+  double abundances[rt_species_count];
+
+  double u_min_cgs;
+
+  int aindex[3];
+
+  /* only use when useparam = 1 */
+  /*! The case A recombination coefficient for hydrogen (cgs) */
+  double alphaA_cgs_H;
+
+  /*! The case B recombination coefficient for hydrogen (cgs) */
+  double alphaB_cgs_H;
+
+  /*! The collisional ionization coefficient for hydrogen (cgs) */
+  double beta_cgs_H;
+
+  /*! The cross section of ionizing photons for hydrogen (cgs) */
+  double sigma_cross_cgs_H[3];
+};
 
 /**
  * @brief Computes the temperature from internal energy u
@@ -713,5 +769,20 @@ INLINE static void initialize_abundances(
                                 init_abundances[rt_sp_HeII] +
                                 2.0 * init_abundances[rt_sp_HeIII];
 }
+
+/**
+ * @brief Defines the right-hand side of the system of differential equations
+ * (dy/dt = ydot).
+ *
+ * Defines the system of differential equations that make
+ * up the right-hand side function, which will be integrated
+ * by CVode.
+ *
+ * @param t Current time.
+ * @param y Vector containing the variables to be integrated.
+ * @param ydot Vector containing the time derivatives of the variables.
+ * @param user_data The #UserData struct containing the input data.
+ */
+int frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 
 #endif /* SWIFT_RT_SPHM1RT_COOLING_RATES_H */

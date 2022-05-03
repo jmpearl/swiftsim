@@ -22,37 +22,18 @@
  * @brief SPHM1RT cooling functions
  */
 
-/* Config parameters. */
-#include "../config.h"
-
 /* Some standard headers. */
-#include <float.h>
-#include <hdf5.h>
-#include <math.h>
-#include <time.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <cvode/cvode.h>
 #include <cvode/cvode_direct.h> /* access to CVDls interface            */
+#include <string.h>
 #include <sunlinsol/sunlinsol_dense.h>
 #include <sunmatrix/sunmatrix_dense.h>
 
-
-
 /* Local includes. */
-#include "active.h"
-#include "error.h"
-#include "exp10.h"
-#include "hydro.h"
-#include "io_properties.h"
-#include "parser.h"
-#include "part.h"
-#include "physical_constants.h"
-#include "rt.h"
 #include "rt_cooling.h"
-#include "space.h"
-#include "units.h"
+#include "rt_cooling_rates.h"
+#include "rt_getters.h"
+#include "rt_setters.h"
 
 /**
  * @brief Main function for the thermochemistry step.
@@ -131,7 +112,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
                          units_cgs_conversion_factor(us, UNIT_CONV_TEMPERATURE);
   data.k_B_cgs = k_B_cgs;
 
-  const double cred = rt_get_physical_cred(p,cosmo);
+  const double cred = rt_get_physical_cred(p, cosmo);
   const double cred_cgs =
       cred * units_cgs_conversion_factor(us, UNIT_CONV_VELOCITY);
   data.cred_cgs = cred_cgs;
@@ -566,7 +547,6 @@ void rt_tchem(struct part* restrict p, struct xpart* restrict xp,
   rt_do_thermochemistry(p, xp, rt_props, cosmo, hydro_props, phys_const, us,
                         dt);
 
-  /* update the comoving reduced speed of light after thermo-chemistry */                     
+  /* update the comoving reduced speed of light after thermo-chemistry */
   p->rt_data.params.cred = rt_props->cred_phys * cosmo->a_inv;
-
 }

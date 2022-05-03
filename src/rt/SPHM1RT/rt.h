@@ -21,7 +21,9 @@
 #define SWIFT_RT_SPHM1RT_H
 
 #include "rt_cooling.h"
+#include "rt_getters.h"
 #include "rt_properties.h"
+#include "rt_setters.h"
 #include "rt_stellar_emission_rate.h"
 #include "rt_struct.h"
 #include "rt_unphysical.h"
@@ -33,200 +35,6 @@
  * @brief Main header file for SPHM1RT radiative transfer scheme.
  * SPHM1RT method described in Chan+21: 2102.08404
  */
-
-
-/**
- * @brief Returns the comoving radiation speed of a particle
- *
- * @param p Pointer to the particle data.
- * @return comoving reduced speed of light
- */
-__attribute__((always_inline)) INLINE static float
-rt_get_comoving_cred(const struct part* restrict p) {
-  return p->rt_data.params.cred;
-}
-
-
-
-/**
- * @brief Returns the physical radiation speed of a particle
- *
- * @param p Pointer to the particle data.
- * @param cosmo Cosmology data structure.
- * @return physical reduced speed of light
- * 
- */
-__attribute__((always_inline)) INLINE static float
-rt_get_physical_cred(const struct part* restrict p, const struct cosmology *cosmo) {
-  return p->rt_data.params.cred * cosmo->a;
-}
-
-
-
-/**
- * @brief Returns the comoving radiation energy per mass of a particle
- * (note that the comoving and physical energy per mass are the same in our
- * convention)
- *
- * @param p Pointer to the particle data.
- * @param urad The comoving radiation energy per mass.
- *
- */
-__attribute__((always_inline)) INLINE static void
-rt_get_comoving_urad_multifrequency(const struct part* restrict p,
-                                    float urad[RT_NGROUPS]) {
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    urad[g] = p->rt_data.conserved[g].urad;
-  }
-}
-
-/**
- * @brief Returns the physical radiation energy per mass of a particle
- * (note that the comoving and physical energy per mass are the same in our
- * convention)
- *
- * @param p Pointer to the particle data.
- * @param cosmo Cosmology data structure.
- * @param urad The physical radiation energy.
- *
- */
-__attribute__((always_inline)) INLINE static void
-rt_get_physical_urad_multifrequency(const struct part* restrict p,
-                                    const struct cosmology* cosmo,
-                                    float urad[RT_NGROUPS]) {
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    urad[g] = p->rt_data.conserved[g].urad;
-  }
-}
-
-/**
- * @brief Sets the comoving radiation energy per mass of a particle
- * (note that the comoving and physical energy per mass are the same in our
- * convention)
- *
- * @param p The particle of interest.
- * @param urad The comoving radiation energy per mass
- *
- */
-__attribute__((always_inline)) INLINE static void
-rt_set_comoving_urad_multifrequency(struct part* p,
-                                    const float urad[RT_NGROUPS]) {
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    p->rt_data.conserved[g].urad = urad[g];
-  }
-}
-
-/**
- * @brief Sets the physical radiation energy per mass of a particle
- * (note that the comoving and physical energy per mass are the same in our
- * convention)
- *
- * @param p The particle of interest.
- * @param cosmo Cosmology data structure
- * @param urad The physical radiation energy per mass
- */
-__attribute__((always_inline)) INLINE static void
-rt_set_physical_urad_multifrequency(struct part* p,
-                                    const struct cosmology* cosmo,
-                                    const float urad[RT_NGROUPS]) {
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    p->rt_data.conserved[g].urad = urad[g];
-  }
-}
-
-/**
- * @brief Returns the comoving radiation flux per gas density of a particle
- * (note that the comoving and physical flux per gas density are the same in our
- * convention)
- *
- * @param p Pointer to the particle data.
- * @param fradtemp The comoving radiation flux per gas density
- */
-__attribute__((always_inline)) INLINE static void
-rt_get_comoving_frad_multifrequency(const struct part* restrict p,
-                                    float fradtemp[RT_NGROUPS][3]) {
-
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    fradtemp[g][0] = p->rt_data.conserved[g].frad[0];
-    fradtemp[g][1] = p->rt_data.conserved[g].frad[1];
-    fradtemp[g][2] = p->rt_data.conserved[g].frad[2];
-  }
-}
-
-/**
- * @brief Returns the physical radiation flux per gas density of a particle
- * (note that the comoving and physical flux per gas density are the same in our
- * convention)
- *
- * @param p Pointer to the particle data.
- * @param cosmo Cosmology data structure
- * @param fradtemp The comoving radiation flux per gas density
- */
-__attribute__((always_inline)) INLINE static void
-rt_get_physical_frad_multifrequency(const struct part* restrict p,
-                                    const struct cosmology* cosmo,
-                                    float fradtemp[RT_NGROUPS][3]) {
-
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    fradtemp[g][0] = p->rt_data.conserved[g].frad[0] * cosmo->a;
-    fradtemp[g][1] = p->rt_data.conserved[g].frad[1] * cosmo->a;
-    fradtemp[g][2] = p->rt_data.conserved[g].frad[2] * cosmo->a;
-  }
-}
-
-/**
- * @brief Sets the comoving radiation flux per density of a particle
- * (note that the comoving and physical flux per density are the same in our
- * convention)
- *
- * @param p The particle of interest.
- * @param frad The comoving radiation flux
- */
-__attribute__((always_inline)) INLINE static void
-rt_set_comoving_frad_multifrequency(struct part* p,
-                                    float frad[RT_NGROUPS][3]) {
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    p->rt_data.conserved[g].frad[0] = frad[g][0];
-    p->rt_data.conserved[g].frad[1] = frad[g][1];
-    p->rt_data.conserved[g].frad[2] = frad[g][2];
-  }
-}
-
-/**
- * @brief Sets the physical radiation flux of a particle
- * (note that the comoving and physical flux are the same in our convention)
- *
- * @param p The particle of interest.
- * @param cosmo Cosmology data structure
- * @param frad The comoving radiation flux
- */
-__attribute__((always_inline)) INLINE static void
-rt_set_physical_radiation_flux_multifrequency(struct part* p,
-                                              const struct cosmology* cosmo,
-                                              float frad[RT_NGROUPS][3]) {
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    p->rt_data.conserved[g].frad[0] = frad[g][0] * cosmo->a_inv;
-    p->rt_data.conserved[g].frad[1] = frad[g][1] * cosmo->a_inv;
-    p->rt_data.conserved[g].frad[2] = frad[g][2] * cosmo->a_inv;
-  }
-}
-
-/**
- * @brief Sets the physical opacity (chi) of a particle
- *
- * @param p The particle of interest.
- * @param cosmo Cosmology data structure
- * @param chi The physical opacity
- */
-__attribute__((always_inline)) INLINE static void
-rt_set_physical_radiation_opacity(struct part* p, const struct cosmology* cosmo,
-                                  const float chi[RT_NGROUPS]) {
-
-  /* avoid getting negative opacity */
-  for (int g = 0; g < RT_NGROUPS; g++) {
-    p->rt_data.params.chi[g] = max(chi[g], 0.f) * cosmo->a_inv * cosmo->a_inv;
-  }
-}
 
 /**
  * @brief Initialisation of the RT density loop related particle data.
@@ -286,7 +94,7 @@ __attribute__((always_inline)) INLINE static void rt_reset_part(
 /**
  * @brief First initialisation of the RT hydro particle data.
  * @param p particle to work on
- * @param rt_props RT properties struct 
+ * @param rt_props RT properties struct
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_part(
     struct part* restrict p, const struct rt_props* restrict rt_props) {
@@ -357,7 +165,7 @@ __attribute__((always_inline)) INLINE static void rt_reset_spart(
 
 /**
  * @brief First initialisation of the RT star particle data.
- * @param sp star particle to work on 
+ * @param sp star particle to work on
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_spart(
     struct spart* restrict sp) {
@@ -470,9 +278,8 @@ __attribute__((always_inline)) INLINE static float rt_compute_timestep(
     const struct phys_const* restrict phys_const,
     const struct unit_system* restrict us) {
 
-  float cred_phys = rt_get_physical_cred(p,cosmo);
-  float dt = p->h * cosmo->a / (cred_phys + FLT_MIN) *
-             rt_props->CFL_condition;
+  float cred_phys = rt_get_physical_cred(p, cosmo);
+  float dt = p->h * cosmo->a / (cred_phys + FLT_MIN) * rt_props->CFL_condition;
 
   return dt;
 }
@@ -484,7 +291,7 @@ __attribute__((always_inline)) INLINE static float rt_compute_timestep(
  * @param sp spart to work on
  * @param rt_props the RT properties struct
  * @param cosmo the cosmology
- * 
+ *
  * @return star time step
  */
 __attribute__((always_inline)) INLINE static float rt_compute_spart_timestep(
@@ -774,19 +581,5 @@ __attribute__((always_inline)) INLINE static void rt_prepare_force(
  */
 __attribute__((always_inline)) INLINE static void rt_clean(
     struct rt_props* props, int restart) {}
-
-/**
- * @brief Defines the right-hand side of the system of differential equations (dy/dt = ydot).
- *
- * Defines the system of differential equations that make
- * up the right-hand side function, which will be integrated
- * by CVode.
- *
- * @param t Current time.
- * @param y Vector containing the variables to be integrated.
- * @param ydot Vector containing the time derivatives of the variables.
- * @param user_data The #UserData struct containing the input data.
- */
-int frateeq(realtype t, N_Vector y, N_Vector ydot, void* user_data);
 
 #endif /* SWIFT_RT_SPHM1RT_H */

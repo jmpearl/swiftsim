@@ -25,9 +25,7 @@
  * thermochemistry related functions.
  */
 
-#include "rt_cooling_rates.h"
 #include "rt_properties.h"
-#include "rt_struct.h"
 #include "rt_unphysical.h"
 
 /**
