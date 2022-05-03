@@ -124,6 +124,12 @@ GEAR_FEEDBACK_SOURCES += feedback/GEAR/stellar_evolution.c feedback/GEAR/feedbac
 	feedback/GEAR/initial_mass_function.c feedback/GEAR/supernovae_ia.c feedback/GEAR/supernovae_ii.c
 endif
 
+# source files for GEAR RT
+GEAR_RT_SOURCES =
+if HAVEGEARRT
+GEAR_RT_SOURCES += rt/GEAR/rt_interaction_rates.c
+endif
+
 # source files for SPHM1RT cooling
 SPHM1RT_RT_SOURCES =
 if HAVESPHM1RTRT
@@ -174,6 +180,7 @@ AM_SOURCES += $(EAGLE_COOLING_SOURCES) $(EAGLE_FEEDBACK_SOURCES)
 AM_SOURCES += $(GRACKLE_COOLING_SOURCES) $(GEAR_FEEDBACK_SOURCES) 
 AM_SOURCES += $(COLIBRE_COOLING_SOURCES)
 AM_SOURCES += $(SPHM1RT_RT_SOURCES)
+AM_SOURCES += $(GEAR_RT_SOURCES)
 
 # Include files for distribution, not installation.
 nobase_noinst_HEADERS = align.h approx_math.h atomic.h barrier.h cycle.h error.h inline.h kernel_hydro.h kernel_gravity.h 
@@ -314,6 +321,8 @@ nobase_noinst_HEADERS += rt/GEAR/rt_thermochemistry.h
 nobase_noinst_HEADERS += rt/GEAR/rt_thermochemistry_utils.h
 nobase_noinst_HEADERS += rt/GEAR/rt_unphysical.h
 nobase_noinst_HEADERS += rt/SPHM1RT/rt.h  
+nobase_noinst_HEADERS += rt/SPHM1RT/rt_getters.h 
+nobase_noinst_HEADERS += rt/SPHM1RT/rt_setters.h 
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_iact.h 
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_io.h 
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_parameters.h
@@ -324,6 +333,7 @@ nobase_noinst_HEADERS += rt/SPHM1RT/rt_additions.h
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_cooling.h
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_cooling_rates.h
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_unphysical.h
+nobase_noinst_HEADERS += rt/SPHM1RT/rt_species_and_elements.h 
 nobase_noinst_HEADERS += rt/SPHM1RT/rt_stellar_emission_rate.h 
 nobase_noinst_HEADERS += stars.h stars_io.h stars_csds.h 
 nobase_noinst_HEADERS += stars/None/stars.h stars/None/stars_iact.h stars/None/stars_io.h 

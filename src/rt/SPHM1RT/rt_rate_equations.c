@@ -23,44 +23,21 @@
  * SPHM1RT method described in Chan+21: 2102.08404
  */
 
-/* Config parameters. */
-#include "../config.h"
-
-/* Some standard headers. */
-#include <float.h>
-#include <hdf5.h>
-#include <math.h>
-#include <time.h>
-
 /* Local includes. */
-#include "active.h"
-#include "error.h"
-#include "exp10.h"
-#include "hydro.h"
-#include "io_properties.h"
-#include "parser.h"
-#include "part.h"
-#include "physical_constants.h"
-#include "rt.h"
 #include "rt_cooling_rates.h"
-#include "space.h"
-#include "units.h"
+#include "rt_species_and_elements.h"
 
 /* Local includes. */
 #include <cvode/cvode.h>
 #include <cvode/cvode_direct.h> /* access to CVDls interface            */
-#include <math.h>
 #include <nvector/nvector_serial.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <sundials/sundials_types.h>
 #include <sunlinsol/sunlinsol_dense.h>
 #include <sunmatrix/sunmatrix_dense.h>
-#include <sys/types.h>
-#include <time.h>
 
 /**
- * @brief Defines the right-hand side of the system of differential equations (dy/dt = ydot).
+ * @brief Defines the right-hand side of the system of differential equations
+ * (dy/dt = ydot).
  *
  * Defines the system of differential equations that make
  * up the right-hand side function, which will be integrated

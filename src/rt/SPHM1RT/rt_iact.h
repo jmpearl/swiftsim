@@ -169,9 +169,8 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
     frad[g][2] = new_frad * n_unit[2];
   }
 
-  rt_set_comoving_urad_multifrequency(pj,urad);
-  rt_set_comoving_frad_multifrequency(pj,frad);
-
+  rt_set_comoving_urad_multifrequency(pj, urad);
+  rt_set_comoving_frad_multifrequency(pj, frad);
 }
 
 /**

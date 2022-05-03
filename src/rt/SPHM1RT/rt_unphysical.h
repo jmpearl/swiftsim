@@ -26,9 +26,6 @@
  */
 
 #include "rt_properties.h"
-#include "rt_struct.h"
-
-#include <string.h>
 
 /**
  * @brief check for and correct if needed unphysical

@@ -26,27 +26,7 @@
  * SPHM1RT method described in Chan+21: 2102.08404
  */
 
-/**
- * @brief The individual elements traced in the SPHM1RT model.
- */
-enum rt_chemistry_element {
-  rt_chemistry_element_H = 0,
-  rt_chemistry_element_He,
-  rt_chemistry_element_count
-};
-
-/**
- * @brief The individual species traced.
- */
-enum rt_cooling_species {
-  rt_sp_elec = 0, /* 0 */
-  rt_sp_HI,       /* 1 */
-  rt_sp_HII,      /* 2 */
-  rt_sp_HeI,      /* 3 */
-  rt_sp_HeII,     /* 4 */
-  rt_sp_HeIII,    /* 5 */
-  rt_species_count
-};
+#include "rt_species_and_elements.h"
 
 /* Additional RT data in hydro particle struct */
 struct rt_part_data {
@@ -106,7 +86,7 @@ struct rt_part_data {
     float cred;
 
     /*! reduced speed of light (physical) */
-    float cred_phys;    
+    float cred_phys;
 
     /*! switch to reinject radiation from injection radius */
     int reinject;
@@ -148,62 +128,6 @@ struct rt_spart_data {
 
   /*! radiation energy within injection radius */
   float emission_reinject[RT_NGROUPS];
-};
-
-struct UserData {
-
-  // void *cvode_mem;           /*!< Pointer to the CVODE memory. */
-
-  /* switch for on the spot approximation */
-  int onthespot;
-
-  /* switch for gas cooling */
-  int coolingon;
-
-  /* switch for not changing photon density */
-  int fixphotondensity;
-
-  /* 1: to use the input parameters; 0: calculate with temperature. */
-  /* (H coefficient only; no heating or cooling) */
-  int useparams;
-
-  /*! Fraction of the particle mass in a given element */
-  double metal_mass_fraction[rt_chemistry_element_count];
-
-  double m_H_cgs;
-
-  double k_B_cgs;
-
-  double cred_cgs;
-
-  double rho_cgs;
-
-  double n_H_cgs;
-
-  double ngamma_cgs[3];
-
-  double u_cgs;
-
-  /*! abundances of species i, i.e. n_i/nH */
-  /* note that we use hydrogen density in the denominator */
-  double abundances[rt_species_count];
-
-  double u_min_cgs;
-
-  int aindex[3];
-
-  /* only use when useparam = 1 */
-  /*! The case A recombination coefficient for hydrogen (cgs) */
-  double alphaA_cgs_H;
-
-  /*! The case B recombination coefficient for hydrogen (cgs) */
-  double alphaB_cgs_H;
-
-  /*! The collisional ionization coefficient for hydrogen (cgs) */
-  double beta_cgs_H;
-
-  /*! The cross section of ionizing photons for hydrogen (cgs) */
-  double sigma_cross_cgs_H[3];
 };
 
 #endif /* SWIFT_RT_STRUCT_SPHM1RT_H */
