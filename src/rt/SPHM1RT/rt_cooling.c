@@ -58,7 +58,6 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
   /* Nothing to do here? */
   if (rt_props->skip_thermochemistry == 1) return;
   if (dt == 0.0) return;
-  if (p->rho == 0.f) return;
 
   rt_check_unphysical_elem_spec(p, rt_props);
 

@@ -66,7 +66,7 @@ runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
 
   /* This is actually the inverse of the enrichment weight */
   /* we abuse the variable here */
-  if ((rhoj != 0.f) && (r2 != 0.f)) {
+  if (r2 != 0.f) {
 #if defined(HYDRO_DIMENSION_3D)
     si->rt_data.injection_weight += mj / rhoj / r2;
 #elif defined(HYDRO_DIMENSION_2D)
@@ -78,12 +78,10 @@ runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
   /* get the radiation energy within injection radius */
   /* we need it only when we need to redistribute the radiation energy */
   if (rt_props->reinject) {
-    if (rhoj != 0.f) {
       float urad[RT_NGROUPS];
       rt_get_physical_urad_multifrequency(pj, cosmo, urad);
       for (int g = 0; g < RT_NGROUPS; g++) {
         si->rt_data.emission_reinject[g] += mj * urad[g];
-      }
     }
   }
 }
@@ -133,7 +131,7 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
 
   float injection_weight = 0.f;
   /* the enrichment weight of individual gas particle */
-  if ((rhoj != 0.f) && (r2 != 0.f)) {
+  if (r2 != 0.f) {
 #if defined(HYDRO_DIMENSION_3D)
     injection_weight = mj / rhoj / r2;
 #elif defined(HYDRO_DIMENSION_2D)
