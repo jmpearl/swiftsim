@@ -13,7 +13,6 @@ import copy
 import unyt
 import sys
 import os
-import csv
 
 # Plot parameters
 params = {
@@ -64,24 +63,14 @@ snapshot_base = "output_MF"
 
 def get_TT1Dsolution():
     TT1D_runit = 5.4 * unyt.unyt_array(1.0, "kpc")  # kpc
-    xtt1dlist = np.array([])
-    rtt1dlist = np.array([])
-    with open("data/xTT1D_Stromgren100Myr.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rtt1dlist = np.append(rtt1dlist, float(row[0]))
-            xtt1dlist = np.append(xtt1dlist, 10 ** float(row[1]))
-    rtt1dlist *= TT1D_runit
+    data = np.loadtxt("data/xTT1D_Stromgren100Myr.txt", delimiter=",")
+    rtt1dlist = data[:,0] * TT1D_runit
+    xtt1dlist = 10**data[:,1]
 
-    Ttt1dlist = np.array([])
-    rTtt1dlist = np.array([])
-    with open("data/TTT1D_Stromgren100Myr.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rTtt1dlist = np.append(rTtt1dlist, float(row[0]))
-            Ttt1dlist = np.append(Ttt1dlist, 10 ** float(row[1]))
-    rTtt1dlist *= TT1D_runit
-    Ttt1dlist *= unyt.unyt_array(1.0, "K")
+    data = np.loadtxt("data/TTT1D_Stromgren100Myr.txt", delimiter=",")
+    rTtt1dlist = data[:,0] * TT1D_runit
+    Ttt1dlist = 10**data[:,1] * unyt.unyt_array(1.0, "K")
+
     outdict = {}
     outdict["rtt1dlist"] = rtt1dlist
     outdict["xtt1dlist"] = xtt1dlist

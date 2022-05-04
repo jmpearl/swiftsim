@@ -14,7 +14,6 @@ import copy
 import unyt
 import sys
 import os
-import csv
 
 # Plot parameters
 params = {
@@ -58,60 +57,30 @@ snapshot_base = "output_HHe"
 
 def get_TT1Dsolution():
     TT1D_runit = 5.4 * unyt.unyt_array(1.0, "kpc")  # kpc
-    xHItt1dlist = np.array([])
-    rHItt1dlist = np.array([])
-    with open("data/xHITT1D_Stromgren100Myr_HHe.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rHItt1dlist = np.append(rHItt1dlist, float(row[0]))
-            xHItt1dlist = np.append(xHItt1dlist, 10 ** float(row[1]))
-    rHItt1dlist *= TT1D_runit
+    data = np.loadtxt("data/xHITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHItt1dlist = data[:,0] * TT1D_runit
+    xHItt1dlist = 10**data[:,1]
 
-    xHIItt1dlist = np.array([])
-    rHIItt1dlist = np.array([])
-    with open("data/xHIITT1D_Stromgren100Myr_HHe.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rHIItt1dlist = np.append(rHIItt1dlist, float(row[0]))
-            xHIItt1dlist = np.append(xHIItt1dlist, 10 ** float(row[1]))
-    rHIItt1dlist *= TT1D_runit
+    data = np.loadtxt("data/xHIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHIItt1dlist = data[:,0] * TT1D_runit
+    xHIItt1dlist = 10**data[:,1]
 
-    xHeItt1dlist = np.array([])
-    rHeItt1dlist = np.array([])
-    with open("data/xHeITT1D_Stromgren100Myr_HHe.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rHeItt1dlist = np.append(rHeItt1dlist, float(row[0]))
-            xHeItt1dlist = np.append(xHeItt1dlist, 10 ** float(row[1]))
-    rHeItt1dlist *= TT1D_runit
+    data = np.loadtxt("data/xHeITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHeItt1dlist = data[:,0] * TT1D_runit
+    xHeItt1dlist = 10**data[:,1]
 
-    xHeIItt1dlist = np.array([])
-    rHeIItt1dlist = np.array([])
-    with open("data/xHeIITT1D_Stromgren100Myr_HHe.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rHeIItt1dlist = np.append(rHeIItt1dlist, float(row[0]))
-            xHeIItt1dlist = np.append(xHeIItt1dlist, 10 ** float(row[1]))
-    rHeIItt1dlist *= TT1D_runit
+    data = np.loadtxt("data/xHeIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHeIItt1dlist = data[:,0] * TT1D_runit
+    xHeIItt1dlist = 10**data[:,1]
 
-    xHeIIItt1dlist = np.array([])
-    rHeIIItt1dlist = np.array([])
-    with open("data/xHeIIITT1D_Stromgren100Myr_HHe.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rHeIIItt1dlist = np.append(rHeIIItt1dlist, float(row[0]))
-            xHeIIItt1dlist = np.append(xHeIIItt1dlist, 10 ** float(row[1]))
-    rHeIIItt1dlist *= TT1D_runit
+    data = np.loadtxt("data/xHeIIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHeIIItt1dlist = data[:,0] * TT1D_runit
+    xHeIIItt1dlist = 10**data[:,1]
 
-    Ttt1dlist = np.array([])
-    rTtt1dlist = np.array([])
-    with open("data/TTT1D_Stromgren100Myr_HHe.csv") as csvfile:
-        spamreader = csv.reader(csvfile, delimiter=",", quotechar="|")
-        for row in spamreader:
-            rTtt1dlist = np.append(rTtt1dlist, float(row[0]))
-            Ttt1dlist = np.append(Ttt1dlist, 10 ** float(row[1]))
-    rTtt1dlist *= TT1D_runit
-    Ttt1dlist *= unyt.unyt_array(1.0, "K")
+    data = np.loadtxt("data/TTT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rTtt1dlist = data[:,0] * TT1D_runit
+    Ttt1dlist = 10**data[:,1] * unyt.unyt_array(1.0, "K")
+
     outdict = {}
     outdict["rHItt1dlist"] = rHItt1dlist
     outdict["xHItt1dlist"] = xHItt1dlist
