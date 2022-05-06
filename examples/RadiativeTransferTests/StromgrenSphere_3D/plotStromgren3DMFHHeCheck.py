@@ -56,7 +56,7 @@ snapshot_base = "output_HHe"
 
 
 def get_TT1Dsolution():
-    TT1D_runit = 5.4 * unyt.unyt_array(1.0, "kpc")  # kpc
+    TT1D_runit = 5.4 * unyt.kpc  # kpc
     data = np.loadtxt("data/xHITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
     rHItt1dlist = data[:,0] * TT1D_runit
     xHItt1dlist = 10**data[:,1]
@@ -79,7 +79,7 @@ def get_TT1Dsolution():
 
     data = np.loadtxt("data/TTT1D_Stromgren100Myr_HHe.txt", delimiter=",")
     rTtt1dlist = data[:,0] * TT1D_runit
-    Ttt1dlist = 10**data[:,1] * unyt.unyt_array(1.0, "K")
+    Ttt1dlist = 10**data[:,1] * unyt.K
 
     outdict = {}
     outdict["rHItt1dlist"] = rHItt1dlist
@@ -241,7 +241,7 @@ def trim_paramstr(paramstr):
     if paramstr.endswith("]"):
         paramstr = paramstr[:-1]
 
-    # transform string values to floats with unyts
+    # transform string values to floats
     params = paramstr.split(",")
     paramtrimmed = []
     for er in params:
@@ -330,7 +330,6 @@ def plot_compare(filename):
         ls="dashed",
     )
     ax[1].set_ylabel("T [K]")
-    xlabel_units_str = meta.boxsize.units.latex_representation()
     ax[1].set_xlabel("r [$" + xlabel_units_str + "$]")
     ax[1].set_yscale("log")
     ax[1].set_xlim([0, 5.4 * 1.3])

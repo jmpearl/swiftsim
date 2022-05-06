@@ -162,7 +162,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
 
   double u_cgs = u * conv_factor_internal_energy_to_cgs;
 
-  double T_cgs = convert_u_to_temp(k_B_cgs, m_H_cgs, X_H, u_cgs, abundances);
+  double T_cgs = rt_convert_u_to_temp(k_B_cgs, m_H_cgs, X_H, u_cgs, abundances);
 
   double T_min_cgs = hydro_props->minimal_temperature;
 
@@ -248,7 +248,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
 
   max_relative_change = 0.0;
   /* compute net changes and cooling and heating for explicit solution */
-  compute_explicit_solution(
+  rt_compute_explicit_thermochemistry_solution(
       n_H_cgs, cred_cgs, dt_cgs, rho_cgs, u_cgs, u_min_cgs, abundances,
       ngamma_cgs, alphalist, betalist, Gammalist, sigmalist, epsilonlist,
       aindex, &u_new_cgs, new_abundances, new_ngamma_cgs, &max_relative_change);
@@ -392,8 +392,6 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
     /* Use CVodeSetMaxNumSteps to set the maximum number
      * of steps CVode takes. */
     CVodeSetMaxNumSteps(cvode_mem, maxsteps);
-
-    /* Set the error handler function. */
 
     /* Use CVodeInit to initialise the integrator
      * memory and specify the right hand side

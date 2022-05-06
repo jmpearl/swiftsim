@@ -24,7 +24,5 @@ fi
 # option with mpi
 # mpirun -np 2 ../../swift_mpi --hydro --threads=14 --stars --external-gravity --feedback --radiation stromgrenSphere-3D-MFHHe.yml 2>&1 | tee output.log
 
-# Plot the photon propagation checks.
-# Make sure you set the correct photon group to plot
-# inside the script
+# Plot the Stromgren 3D with hydrogen and helium checks.
 python3 ./plotStromgren3DMFHHeCheck.py 102

@@ -109,11 +109,11 @@ int frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
   }
 
   double T_cgs =
-      convert_u_to_temp(data->k_B_cgs, data->m_H_cgs,
+      rt_convert_u_to_temp(data->k_B_cgs, data->m_H_cgs,
                         data->metal_mass_fraction[rt_chemistry_element_H],
                         u_cgs, data->abundances);
   const double T_min_cgs =
-      convert_u_to_temp(data->k_B_cgs, data->m_H_cgs,
+      rt_convert_u_to_temp(data->k_B_cgs, data->m_H_cgs,
                         data->metal_mass_fraction[rt_chemistry_element_H],
                         data->u_min_cgs, data->abundances);
   if (T_min_cgs > T_cgs) {

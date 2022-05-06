@@ -95,7 +95,7 @@ struct UserData {
  * @return T_cgs temperature in K.
  *
  */
-__attribute__((always_inline)) INLINE static double convert_u_to_temp(
+__attribute__((always_inline)) INLINE static double rt_convert_u_to_temp(
     const double k_B_cgs, const double m_H_cgs, const double X_H,
     const double u_cgs, const double abundances[rt_species_count]) {
 
@@ -155,6 +155,7 @@ INLINE static void get_index_to_species(int aindex[3]) {
 
 /**
  * @brief Computes the chemistry coefficient (Hui and Gnedin 1997)
+ * https://ui.adsabs.harvard.edu/abs/1997MNRAS.292...27H/abstract
  * @param T_cgs temperature in K
  * @param onthespot use on the spot approximation?
  * @return alphalist  coefficients of recomination
@@ -246,6 +247,7 @@ INLINE static void compute_alphabeta_cgs(double T_cgs, int onthespot,
 
 /**
  * @brief Computes the cooling coefficient (Hui and Gnedin 1997)
+ * https://ui.adsabs.harvard.edu/abs/1997MNRAS.292...27H/abstract
  * @param T_cgs temperature in K
  * @param onthespot use on the spot approximation?
  * @return Gammalist cooling coefficients of recomination and collisional
@@ -569,7 +571,7 @@ INLINE static double compute_cooling_rate(
 /**
  * @brief function used to enforce constraint equation.
  * If any of these
- * constraints are not met to within 0.1 per cent, the
+ * constraints are not met to within 1 per cent, the
  * abundances of all species involved in that constraint
  * are re-scaled accordingly. This routine also enforces
  * that all abundances are non-negative.
@@ -633,7 +635,7 @@ INLINE static void enforce_constraint_equations(
 }
 
 /**
- * @brief function used to enforce constraint equation.
+ * @brief function to calculate ionization, heating, and cooling explicitly.
  *
  * @param abundances species abundance in n_i/nH.
  * @param metal_mass_fraction metal mass
@@ -658,7 +660,7 @@ INLINE static void enforce_constraint_equations(
  * @return new_ngamma_cgs  new photon density in cm^-3
  * @return max_relative_change maximum relative change in all variables
  */
-INLINE static void compute_explicit_solution(
+INLINE static void rt_compute_explicit_thermochemistry_solution(
     const double n_H_cgs, const double cred_cgs, const double dt_cgs,
     const double rho_cgs, const double u_cgs, const double u_min_cgs,
     const double abundances[rt_species_count], const double ngamma_cgs[3],

@@ -62,14 +62,14 @@ snapshot_base = "output_MF"
 
 
 def get_TT1Dsolution():
-    TT1D_runit = 5.4 * unyt.unyt_array(1.0, "kpc")  # kpc
+    TT1D_runit = 5.4 * unyt.kpc  # kpc
     data = np.loadtxt("data/xTT1D_Stromgren100Myr.txt", delimiter=",")
     rtt1dlist = data[:,0] * TT1D_runit
     xtt1dlist = 10**data[:,1]
 
     data = np.loadtxt("data/TTT1D_Stromgren100Myr.txt", delimiter=",")
     rTtt1dlist = data[:,0] * TT1D_runit
-    Ttt1dlist = 10**data[:,1] * unyt.unyt_array(1.0, "K")
+    Ttt1dlist = 10**data[:,1] * unyt.K
 
     outdict = {}
     outdict["rtt1dlist"] = rtt1dlist
@@ -227,7 +227,8 @@ def plot_compare(filename):
     ax[1].set_xlabel("r [$" + xlabel_units_str + "$]")
     ax[1].set_yscale("log")
     ax[1].set_xlim([0, boxsize[0] / 2.0])
-
+    ax[1].legend(loc="best")
+    
     plt.tight_layout()
     figname = filename[:-5]
     figname += "-Stromgren3DMF.png"

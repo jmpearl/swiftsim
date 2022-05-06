@@ -35,7 +35,6 @@ params = {
     "axes.linewidth": 1.5,
     "text.usetex": True,
     "figure.figsize": (5, 4),
-    #'figure.figsize' : (9.90,3.25),
     "figure.subplot.left": 0.045,
     "figure.subplot.right": 0.99,
     "figure.subplot.bottom": 0.05,
@@ -44,7 +43,6 @@ params = {
     "figure.subplot.hspace": 0.12,
     "lines.markersize": 1,
     "lines.linewidth": 2.0,
-    #'text.latex.unicode': True
 }
 mpl.rcParams.update(params)
 mpl.rc("font", **{"family": "sans-serif", "sans-serif": ["Times"]})
@@ -123,7 +121,7 @@ def trim_paramstr(paramstr):
     if paramstr.endswith("]"):
         paramstr = paramstr[:-1]
 
-    # transform string values to floats with unyts
+    # transform string values to floats
     params = paramstr.split(",")
     paramtrimmed = []
     for er in params:
@@ -147,8 +145,8 @@ def get_analytic_solution(data):
     meta = data.metadata
     rho = data.gas.densities
     rini_value = 0.1
-    r_ana = np.linspace(rini_value, 10.0, 100) * unyt.unyt_array(1.0, "kpc")
-    rini = rini_value * unyt.unyt_array(1.0, "kpc")
+    r_ana = np.linspace(rini_value, 10.0, 100) * unyt.kpc
+    rini = rini_value * unyt.kpc
     nH = np.mean(rho.to("g/cm**3") / unyt.proton_mass)
     sigma_cross = trim_paramstr(
         meta.parameters["SPHM1RT:sigma_cross"].decode("utf-8")
@@ -157,15 +155,10 @@ def get_analytic_solution(data):
     alphaB = trim_paramstr(
         meta.parameters["SPHM1RT:alphaB"].decode("utf-8")
     ) * unyt.unyt_array(1.0, "cm**3/s")
-    unit_l_in_cgs = float(
-        meta.parameters["Snapshots:UnitLength_in_cgs"]
-    ) * unyt.unyt_array(1.0, "cm")
-    unit_v_in_cgs = float(
-        meta.parameters["Snapshots:UnitVelocity_in_cgs"]
-    ) * unyt.unyt_array(1.0, "cm/s")
-    unit_m_in_cgs = float(
-        meta.parameters["Snapshots:UnitMass_in_cgs"]
-    ) * unyt.unyt_array(1.0, "g")
+    units = data.units
+    unit_l_in_cgs = units.length.in_cgs() 
+    unit_v_in_cgs = (units.length / units.time).in_cgs()
+    unit_m_in_cgs = units.mass.in_cgs()
     star_emission_rates = (
         trim_paramstr(meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8"))
         * unit_m_in_cgs
@@ -174,7 +167,7 @@ def get_analytic_solution(data):
     )
     ionizing_photon_energy_erg = trim_paramstr(
         meta.parameters["SPHM1RT:ionizing_photon_energy_erg"].decode("utf-8")
-    ) * unyt.unyt_array(1.0, "erg")
+    ) * unyt.erg
     dNinj = star_emission_rates[1] / ionizing_photon_energy_erg[0]
     xn = neutralfraction3d(r_ana, nH, sigma, alphaB, dNinj, rini)
     return r_ana, xn

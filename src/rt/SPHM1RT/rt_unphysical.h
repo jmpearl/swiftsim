@@ -74,7 +74,6 @@ __attribute__((always_inline)) INLINE static void rt_check_unphysical_state(
   const double flux_normdouble = (flux2double == 0.0) ? 0.0 : sqrt(flux2double);
   const float flux_norm = (float)(flux_normdouble);
 
-  // const float flux_norm = (flux2 == 0.f) ? 0.f : sqrtf(flux2);
   const float flux_norm_inv = (flux_norm == 0.f) ? 0.f : 1.f / flux_norm;
   const float flux_max = cred * *energy_density;
   float flux_diff = flux_norm - flux_max;

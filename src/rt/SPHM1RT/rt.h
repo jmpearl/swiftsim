@@ -279,7 +279,7 @@ __attribute__((always_inline)) INLINE static float rt_compute_timestep(
     const struct unit_system* restrict us) {
 
   float cred_phys = rt_get_physical_cred(p, cosmo);
-  float dt = p->h * cosmo->a / (cred_phys + FLT_MIN) * rt_props->CFL_condition;
+  float dt = p->h * cosmo->a / cred_phys * rt_props->CFL_condition;
 
   return dt;
 }
