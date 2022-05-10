@@ -233,9 +233,10 @@ def plot_photons(filename, emin, emax, fmin, fmax):
             const_emission_rates = unyt.unyt_array(emlist, unyt.L_Sun)
             L = const_emission_rates[group_index]
         elif scheme.startswith("SPH M1closure"):
-            unit_l_in_cgs = float(meta.parameters["Snapshots:UnitLength_in_cgs"])
-            unit_v_in_cgs = float(meta.parameters["Snapshots:UnitVelocity_in_cgs"])
-            unit_m_in_cgs = float(meta.parameters["Snapshots:UnitMass_in_cgs"])
+            units = data.units
+            unit_l_in_cgs = units.length.in_cgs() 
+            unit_v_in_cgs = (units.length / units.time).in_cgs()
+            unit_m_in_cgs = units.mass.in_cgs()
             emissionstr = meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8")
             # clean string up
             if emissionstr.startswith("["):

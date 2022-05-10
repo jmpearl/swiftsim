@@ -63,6 +63,11 @@ mpl.rcParams["text.usetex"] = True
 def get_imf(scheme, data):
     """
     Get the ion mass fraction (imf) according to the scheme.
+    return a class with ion mass function for species X, 
+    including HI, HII, HeI, HeII, HeIII:
+    The ion mass function can be accessed through: imf.X
+    The unit is in m_X/m_tot, where m_X is the mass in species X
+    and m_tot is the total gas mass.
     """
     if scheme.startswith("GEAR M1closure"):
         imf = data.gas.ion_mass_fractions
