@@ -194,7 +194,12 @@ def get_imf(scheme, data):
 
 def get_abundances(scheme, data):
     """
-    Get the species abundance in n_X/n_H according to the scheme.
+    Get the species abundance according to the scheme
+    return a class with normalized number densities for abunance X, 
+    including HI, HII, HeI, HeII, HeIII:
+    The ion mass function can be accessed through: sA.X
+    The unit is in n_X/n_H, where n_X is the number density of species X
+    and n_H is the number density of hydrogen.
     """
     if scheme.startswith("GEAR M1closure"):
         # atomic mass
@@ -205,31 +210,31 @@ def get_abundances(scheme, data):
         )
         # abundance is in n_X/n_H unit. We convert mass fraction to abundance by dividing mass fraction of H
         abundance = (
-            getattr(data.gas.ion_mass_fractions, "HI")
+            data.gas.ion_mass_fractions.HI
             / mass_fraction_hydrogen
             / mamu["HI"]
         )
         setattr(sA, "HI", abundance)
         abundance = (
-            getattr(data.gas.ion_mass_fractions, "HII")
+            data.gas.ion_mass_fractions.HII
             / mass_fraction_hydrogen
             / mamu["HII"]
         )
         setattr(sA, "HII", abundance)
         abundance = (
-            getattr(data.gas.ion_mass_fractions, "HeI")
+            data.gas.ion_mass_fractions.HeI
             / mass_fraction_hydrogen
             / mamu["HeI"]
         )
         setattr(sA, "HeI", abundance)
         abundance = (
-            getattr(data.gas.ion_mass_fractions, "HeII")
+            data.gas.ion_mass_fractions.HeII
             / mass_fraction_hydrogen
             / mamu["HeII"]
         )
         setattr(sA, "HeII", abundance)
         abundance = (
-            getattr(data.gas.ion_mass_fractions, "HeIII")
+            data.gas.ion_mass_fractions.HeIII
             / mass_fraction_hydrogen
             / mamu["HeIII"]
         )
@@ -241,6 +246,7 @@ def get_abundances(scheme, data):
 
 def trim_paramstr(paramstr):
     # clean string up
+    paramstr = paramstr.strip()
     if paramstr.startswith("["):
         paramstr = paramstr[1:]
     if paramstr.endswith("]"):

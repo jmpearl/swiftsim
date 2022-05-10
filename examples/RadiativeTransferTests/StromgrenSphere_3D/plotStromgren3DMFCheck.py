@@ -176,6 +176,7 @@ def get_imf(scheme, data):
 
 def trim_paramstr(paramstr):
     # clean string up
+    paramstr = paramstr.strip()
     if paramstr.startswith("["):
         paramstr = paramstr[1:]
     if paramstr.endswith("]"):
@@ -228,7 +229,6 @@ def plot_compare(filename):
         outdict["rTtt1dlist"], outdict["Ttt1dlist"], color="k", lw=2.0, label="TT1D"
     )
     ax[1].set_ylabel("T [K]")
-    xlabel_units_str = meta.boxsize.units.latex_representation()
     ax[1].set_xlabel("r [$" + xlabel_units_str + "$]")
     ax[1].set_yscale("log")
     ax[1].set_xlim([0, boxsize[0] / 2.0])

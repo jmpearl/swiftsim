@@ -121,6 +121,7 @@ def get_imf(scheme, data):
 
 def trim_paramstr(paramstr):
     # clean string up
+    paramstr = paramstr.strip()
     if paramstr.startswith("["):
         paramstr = paramstr[1:]
     if paramstr.endswith("]"):
