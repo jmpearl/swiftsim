@@ -158,13 +158,6 @@ __attribute__((always_inline)) INLINE static void rt_props_print(
   strcat(messagestring, "]");
   message("%s", messagestring);
 
-  for (int g = 1; g < RT_NGROUPS; g++) {
-    sprintf(freqstring, ", %.3g", rtp->initialchi[g]);
-    strcat(messagestring, freqstring);
-  }
-  strcat(messagestring, "]");
-  message("%s", messagestring);
-
   if (rtp->use_const_emission_rates) {
     strcpy(messagestring, "Using constant stellar emission rates: [ ");
     for (int g = 0; g < RT_NGROUPS; g++) {
