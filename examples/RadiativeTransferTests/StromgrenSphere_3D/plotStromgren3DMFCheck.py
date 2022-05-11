@@ -9,10 +9,8 @@ import swiftsimio
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 import numpy as np
-import copy
-import unyt
 import sys
-import os
+import stromgren_plotting_tools as spt
 
 # Plot parameters
 params = {
@@ -57,137 +55,9 @@ try:
     snapnr = int(sys.argv[1])
 except IndexError:
     plot_all = True
+    snapnr = -1
 
 snapshot_base = "output_MF"
-
-
-def get_TT1Dsolution():
-    TT1D_runit = 5.4 * unyt.kpc  # kpc
-    data = np.loadtxt("data/xTT1D_Stromgren100Myr.txt", delimiter=",")
-    rtt1dlist = data[:,0] * TT1D_runit
-    xtt1dlist = 10**data[:,1]
-
-    data = np.loadtxt("data/TTT1D_Stromgren100Myr.txt", delimiter=",")
-    rTtt1dlist = data[:,0] * TT1D_runit
-    Ttt1dlist = 10**data[:,1] * unyt.K
-
-    outdict = {}
-    outdict["rtt1dlist"] = rtt1dlist
-    outdict["xtt1dlist"] = xtt1dlist
-    outdict["rTtt1dlist"] = rTtt1dlist
-    outdict["Ttt1dlist"] = Ttt1dlist
-    return outdict
-
-
-def mean_molecular_weight(XH0, XHp, XHe0, XHep, XHepp):
-    """
-    Determines the mean molecular weight for given 
-    mass fractions of
-        hydrogen:   XH0
-        H+:         XHp
-        He:         XHe0
-        He+:        XHep
-        He++:       XHepp
-
-    returns:
-        mu: mean molecular weight [in atomic mass units]
-        NOTE: to get the actual mean mass, you still need
-        to multiply it by m_u, as is tradition in the formulae
-    """
-
-    # 1/mu = sum_j X_j / A_j * (1 + E_j)
-    # A_H    = 1, E_H    = 0
-    # A_Hp   = 1, E_Hp   = 1
-    # A_He   = 4, E_He   = 0
-    # A_Hep  = 4, E_Hep  = 1
-    # A_Hepp = 4, E_Hepp = 2
-    one_over_mu = XH0 + 2 * XHp + 0.25 * XHe0 + 0.5 * XHep + 0.75 * XHepp
-
-    return 1.0 / one_over_mu
-
-
-def gas_temperature(u, mu, gamma):
-    """
-    Compute the gas temperature given the specific internal 
-    energy u and the mean molecular weight mu
-    """
-
-    # Using u = 1 / (gamma - 1) * p / rho
-    #   and p = N/V * kT = rho / (mu * m_u) * kT
-
-    T = u * (gamma - 1) * mu * unyt.atomic_mass_unit / unyt.boltzmann_constant
-
-    return T.to("K")
-
-
-def get_snapshot_list(snapshot_basename="output"):
-    """
-    Find the snapshot(s) that are to be plotted 
-    and return their names as list
-    """
-
-    snaplist = []
-
-    if plot_all:
-        dirlist = os.listdir()
-        for f in dirlist:
-            if f.startswith(snapshot_basename) and f.endswith("hdf5"):
-                snaplist.append(f)
-
-        snaplist = sorted(snaplist)
-
-    else:
-        fname = snapshot_basename + "_" + str(snapnr).zfill(4) + ".hdf5"
-        if not os.path.exists(fname):
-            print("Didn't find file", fname)
-            quit(1)
-        snaplist.append(fname)
-
-    return snaplist
-
-
-def get_imf(scheme, data):
-    """
-    Get the ion mass fraction (imf) according to the scheme.
-    return a class with ion mass function for species X, 
-    including HI, HII, HeI, HeII, HeIII:
-    The ion mass function can be accessed through: imf.X
-    The unit is in m_X/m_tot, where m_X is the mass in species X
-    and m_tot is the total gas mass.
-    """
-    if scheme.startswith("GEAR M1closure"):
-        imf = data.gas.ion_mass_fractions
-    elif scheme.startswith("SPH M1closure"):
-        # atomic mass
-        mamu = {"e": 0.0, "HI": 1.0, "HII": 1.0, "HeI": 4.0, "HeII": 4.0, "HeIII": 4.0}
-        mass_fraction_hydrogen = data.gas.rt_element_mass_fractions.hydrogen
-        imf = copy.deepcopy(data.gas.rt_species_abundances)
-        named_columns = data.gas.rt_species_abundances.named_columns
-        for column in named_columns:
-            # abundance is in n_X/n_H unit. We convert it to mass fraction by multipling mass fraction of H
-            mass_fraction = (
-                getattr(data.gas.rt_species_abundances, column)
-                * mass_fraction_hydrogen
-                * mamu[column]
-            )
-            setattr(imf, column, mass_fraction)
-    return imf
-
-
-def trim_paramstr(paramstr):
-    # clean string up
-    paramstr = paramstr.strip()
-    if paramstr.startswith("["):
-        paramstr = paramstr[1:]
-    if paramstr.endswith("]"):
-        paramstr = paramstr[:-1]
-
-    # transform string values to floats with unyts
-    params = paramstr.split(",")
-    paramtrimmed = []
-    for er in params:
-        paramtrimmed.append(float(er))
-    return paramtrimmed
 
 
 def plot_compare(filename):
@@ -204,13 +74,13 @@ def plot_compare(filename):
     dxp = xpart - xstar
     r = np.sqrt(np.sum(dxp ** 2, axis=1))
 
-    imf = get_imf(scheme, data)
+    imf = spt.get_imf(scheme, data)
     xHI = imf.HI / (imf.HI + imf.HII)
 
-    mu = mean_molecular_weight(imf.HI, imf.HII, imf.HeI, imf.HeII, imf.HeIII)
-    data.gas.T = gas_temperature(data.gas.internal_energies, mu, gamma)
+    mu = spt.mean_molecular_weight(imf.HI, imf.HII, imf.HeI, imf.HeII, imf.HeIII)
+    data.gas.T = spt.gas_temperature(data.gas.internal_energies, mu, gamma)
 
-    outdict = get_TT1Dsolution()
+    outdict = spt.get_TT1Dsolution()
 
     fig, ax = plt.subplots(1, 2)
 
@@ -242,6 +112,6 @@ def plot_compare(filename):
 
 
 if __name__ == "__main__":
-    snaplist = get_snapshot_list(snapshot_base)
+    snaplist = spt.get_snapshot_list(snapshot_base,plot_all,snapnr)
     for f in snaplist:
         plot_compare(f)
