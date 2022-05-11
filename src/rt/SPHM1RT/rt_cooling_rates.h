@@ -120,7 +120,7 @@ __attribute__((always_inline)) INLINE static double rt_convert_u_to_temp(
  * @return u_cgs the internal energy in cgs
  *
  */
-__attribute__((always_inline)) INLINE static double convert_temp_to_u(
+__attribute__((always_inline)) INLINE static double rt_convert_temp_to_u(
     const double k_B_cgs, const double m_H_cgs, const double T_cgs,
     const double X_H, const double abundances[rt_species_count]) {
   double sumabundances = 0.0;
@@ -139,7 +139,7 @@ __attribute__((always_inline)) INLINE static double convert_temp_to_u(
  * @brief Output the array translating to species
  * @return aindex   use to translate index to species
  */
-INLINE static void get_index_to_species(int aindex[3]) {
+INLINE static void rt_get_index_to_species(int aindex[3]) {
   /* the first index denotes frequency bins; the second index denotes species */
   /* HI: index 0 */
   aindex[0] = rt_sp_HI; /* use to translate index to species */
@@ -161,7 +161,7 @@ INLINE static void get_index_to_species(int aindex[3]) {
  * @return alphalist  coefficients of recomination
  * @return betalist  coefficients of collisional ionization
  */
-INLINE static void compute_alphabeta_cgs(double T_cgs, int onthespot,
+INLINE static void rt_compute_alphabeta_cgs(double T_cgs, int onthespot,
                                          double alphalist[rt_species_count],
                                          double betalist[rt_species_count]) {
 
@@ -253,7 +253,7 @@ INLINE static void compute_alphabeta_cgs(double T_cgs, int onthespot,
  * @return Gammalist cooling coefficients of recomination and collisional
  * ionization (recombination positive)
  */
-INLINE static void compute_cooling_gamma_cgs(
+INLINE static void rt_compute_cooling_gamma_cgs(
     const double T_cgs, const int onthespot,
     double Gammalist[rt_species_count]) {
 
@@ -368,7 +368,7 @@ INLINE static void compute_cooling_gamma_cgs(
  * @return sigmalist  photo-ionization cross section in cm^2
  * @return epsilonlist  averaged thermal energy per ionization in erg
  */
-INLINE static void compute_photoionization_rate_cgs(double sigmalist[3][3],
+INLINE static void rt_compute_photoionization_rate_cgs(double sigmalist[3][3],
                                                     double epsilonlist[3][3]) {
   /* the first index denotes frequency bins; the second index denotes species */
   /* HI: index 0 */
@@ -408,13 +408,13 @@ INLINE static void compute_photoionization_rate_cgs(double sigmalist[3][3],
  * @param epsilonlist  averaged thermal energy per ionization in erg
  * @param aindex   use to translate index to species
  */
-INLINE static void compute_rate_coefficients(
+INLINE static void rt_compute_rate_coefficients(
     const double T_cgs, const int onthespot, double alphalist[rt_species_count],
     double betalist[rt_species_count], double Gammalist[rt_species_count],
     double sigmalist[3][3], double epsilonlist[3][3]) {
-  compute_alphabeta_cgs(T_cgs, onthespot, alphalist, betalist);
-  compute_cooling_gamma_cgs(T_cgs, onthespot, Gammalist);
-  compute_photoionization_rate_cgs(sigmalist, epsilonlist);
+  rt_compute_alphabeta_cgs(T_cgs, onthespot, alphalist, betalist);
+  rt_compute_cooling_gamma_cgs(T_cgs, onthespot, Gammalist);
+  rt_compute_photoionization_rate_cgs(sigmalist, epsilonlist);
 }
 
 /**
@@ -434,7 +434,7 @@ INLINE static void compute_rate_coefficients(
  *
  * @return chemistry_rates The chemistry rate (d n_i / d t in cgs)
  */
-INLINE static void compute_chemistry_rate(
+INLINE static void rt_compute_chemistry_rate(
     const double n_H_cgs, const double cred_cgs,
     const double abundances[rt_species_count], const double ngamma_cgs[3],
     const double alphalist[rt_species_count],
@@ -505,7 +505,7 @@ INLINE static void compute_chemistry_rate(
  * @return absorption_rate The radiation absorption rate (d n_gamma / d t in
  * cgs) excluded diffuse emission
  */
-INLINE static void compute_radiation_rate(
+INLINE static void rt_compute_radiation_rate(
     const double n_H_cgs, const double cred_cgs,
     const double abundances[rt_species_count], const double ngamma_cgs[3],
     double sigmalist[3][3], const int aindex[3], double absorption_rate[3]) {
@@ -539,7 +539,7 @@ INLINE static void compute_radiation_rate(
  *
  * @return The net cooling rate of gas (d energy density / d t in cgs)
  */
-INLINE static double compute_cooling_rate(
+INLINE static double rt_compute_cooling_rate(
     const double n_H_cgs, const double cred_cgs,
     const double abundances[rt_species_count], const double ngamma_cgs[3],
     const double Gammalist[rt_species_count], double sigmalist[3][3],
@@ -580,7 +580,7 @@ INLINE static double compute_cooling_rate(
  *
  * @return finish_abundances species abundance in n_i/nH.
  */
-INLINE static void enforce_constraint_equations(
+INLINE static void rt_enforce_constraint_equations(
     const double abundances[rt_species_count],
     const double metal_mass_fraction[rt_chemistry_element_count],
     double finish_abundances[rt_species_count]) {
@@ -676,15 +676,15 @@ INLINE static void rt_compute_explicit_thermochemistry_solution(
   if (dt_cgs == 0.0) error("dt_cgs==%e", dt_cgs);
   if (n_H_cgs == 0.0) error("n_H_cgs==%e", n_H_cgs);
 
-  compute_radiation_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, sigmalist,
+  rt_compute_radiation_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, sigmalist,
                          aindex, absorption_rate);
 
-  compute_chemistry_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, alphalist,
+  rt_compute_chemistry_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, alphalist,
                          betalist, sigmalist, aindex, chemistry_rates);
 
   double Lambda_net_cgs;
   Lambda_net_cgs =
-      compute_cooling_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, Gammalist,
+      rt_compute_cooling_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, Gammalist,
                            sigmalist, epsilonlist, aindex);
 
   /* record for maximum relative change */
@@ -737,7 +737,7 @@ INLINE static void rt_compute_explicit_thermochemistry_solution(
  *
  * @return The net cooling rate of gas (d energy density / d t in cgs)
  */
-INLINE static void initialize_abundances(
+INLINE static void rt_initialize_abundances(
     const double alphalist[rt_species_count],
     const double betalist[rt_species_count],
     const double metal_mass_fraction[rt_chemistry_element_count],
@@ -785,6 +785,6 @@ INLINE static void initialize_abundances(
  * @param ydot Vector containing the time derivatives of the variables.
  * @param user_data The #UserData struct containing the input data.
  */
-int frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data);
+int rt_frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 
 #endif /* SWIFT_RT_SPHM1RT_COOLING_RATES_H */

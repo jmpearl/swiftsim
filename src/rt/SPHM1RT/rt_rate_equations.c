@@ -48,7 +48,7 @@
  * @param ydot Vector containing the time derivatives of the variables.
  * @param user_data The #UserData struct containing the input data.
  */
-int frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
+int rt_frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
   struct UserData *data;
 
   data = (struct UserData *)user_data;
@@ -70,7 +70,7 @@ int frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
 
   /* Update the species not in the network */
   double finish_abundances[rt_species_count];
-  enforce_constraint_equations(data->abundances, data->metal_mass_fraction,
+  rt_enforce_constraint_equations(data->abundances, data->metal_mass_fraction,
                                finish_abundances);
   for (int spec = 0; spec < rt_species_count; spec++) {
     data->abundances[spec] = finish_abundances[spec];
@@ -162,22 +162,22 @@ int frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
       }
     }
   } else {
-    compute_rate_coefficients(T_cgs, data->onthespot, alphalist, betalist,
+    rt_compute_rate_coefficients(T_cgs, data->onthespot, alphalist, betalist,
                               Gammalist, sigmalist, epsilonlist);
   }
 
   // Compute creation and destruction rates
   double absorption_rate[3], chemistry_rates[rt_species_count];
 
-  compute_radiation_rate(data->n_H_cgs, data->cred_cgs, data->abundances,
+  rt_compute_radiation_rate(data->n_H_cgs, data->cred_cgs, data->abundances,
                          ngamma_cgs, sigmalist, aindex, absorption_rate);
 
-  compute_chemistry_rate(data->n_H_cgs, data->cred_cgs, data->abundances,
+  rt_compute_chemistry_rate(data->n_H_cgs, data->cred_cgs, data->abundances,
                          ngamma_cgs, alphalist, betalist, sigmalist, aindex,
                          chemistry_rates);
 
   double Lambda_net_cgs;
-  Lambda_net_cgs = compute_cooling_rate(data->n_H_cgs, data->cred_cgs,
+  Lambda_net_cgs = rt_compute_cooling_rate(data->n_H_cgs, data->cred_cgs,
                                         data->abundances, ngamma_cgs, Gammalist,
                                         sigmalist, epsilonlist, aindex);
 

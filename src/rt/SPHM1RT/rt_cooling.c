@@ -167,7 +167,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
   double T_min_cgs = hydro_props->minimal_temperature;
 
   double u_min_cgs =
-      convert_temp_to_u(k_B_cgs, m_H_cgs, T_min_cgs, X_H, abundances);
+      rt_convert_temp_to_u(k_B_cgs, m_H_cgs, T_min_cgs, X_H, abundances);
 
   u_cgs = fmax(u_cgs, u_min_cgs);
 
@@ -180,7 +180,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
   /**************************/
   int aindex[3];
 
-  get_index_to_species(aindex);
+  rt_get_index_to_species(aindex);
   for (int i = 0; i < 3; i++) {
     data.aindex[i] = aindex[i];
   }
@@ -231,7 +231,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
       }
     }
   } else {
-    compute_rate_coefficients(T_cgs, onthespot, alphalist, betalist, Gammalist,
+    rt_compute_rate_coefficients(T_cgs, onthespot, alphalist, betalist, Gammalist,
                               sigmalist, epsilonlist);
   }
 
@@ -258,7 +258,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
   if (new_abundances[rt_sp_HI] > 1.01) {
     errorHI = 1;
   } else {
-    enforce_constraint_equations(new_abundances, metal_mass_fraction,
+    rt_enforce_constraint_equations(new_abundances, metal_mass_fraction,
                                  finish_abundances);
   }
 
@@ -398,7 +398,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
      * function in y' = f(t,y) (i.e. the rate
      * equations), the initial time 0.0 and the
      * initial conditions, in y. */
-    CVodeInit(cvode_mem, frateeq, 0.0f, y);
+    CVodeInit(cvode_mem, rt_frateeq, 0.0f, y);
 
     /* Use CVodeSVtolerances to specify the scalar
      * relative and absolute tolerances. */
@@ -448,7 +448,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
 
     if (new_abundances[rt_sp_HI] > 1.01)
       error("HI fraction bigger than one after the CVODE solver");
-    enforce_constraint_equations(new_abundances, metal_mass_fraction,
+    rt_enforce_constraint_equations(new_abundances, metal_mass_fraction,
                                  finish_abundances);
     for (int spec = 0; spec < rt_species_count; spec++) {
       if (finish_abundances[spec] > 0.f) {
