@@ -86,6 +86,6 @@ SPHM1RT:
   relativeTolerance:          1e-3                    # (Optional) Relative tolerance for SPHM1RT thermo-chemistry intergration
   absoluteTolerance:          1e-10                   # (Optional) Absolute tolerance for SPHM1RT thermo-chemistry integration
   explicitTolerance:          0.1                     # (Optional) Tolerance below which we use the explicit solution in SPHM1RT thermo-chemistry
-  ionizing_photon_energy_erg: [3.0208e-11, 5.61973e-11, 1.05154e-10]  # (Optional) ionizing photon energy in erg in different frequency bins
+  ionizing_photon_energy_erg: [3.0208e-11, 5.61973e-11, 1.05154e-10]  # (Optional) ionizing photon energy in erg averaged within frequency bins
 
 

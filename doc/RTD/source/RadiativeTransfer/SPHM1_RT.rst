@@ -101,7 +101,7 @@ Thermo-chemistry parameters for RT
     relativeTolerance:          1e-3                    # (Optional) Relative tolerance for SPHM1RT thermo-chemistry intergration
     absoluteTolerance:          1e-10                   # (Optional) Absolute tolerance for SPHM1RT thermo-chemistry integration
     explicitTolerance:          0.1                     # (Optional) Tolerance below which we use the explicit solution in SPHM1RT thermo-chemistry
-    ionizing_photon_energy_erg: [3.0208e-11, 5.61973e-11, 1.05154e-10]  # (Optional) ionizing photon energy in erg in different frequency bins
+    ionizing_photon_energy_erg: [3.0208e-11, 5.61973e-11, 1.05154e-10]  # (Optional) ionizing photon energy in erg averaged over frequency bins
     skip_thermochemistry: 0                             # (Optional) skip the thermochemistry. This is intended only for debugging and testing the radiation transport, as it breaks the purpose of RT.
     coolingon:              1                           # (Optional) switch for cooling (and photoheating), but photo-ionization will be ongoing even if coolingon==0 
     useparams:              1                           # (Optional) switch to use thermo-chemistry parameters from the parameter file
@@ -109,6 +109,14 @@ Thermo-chemistry parameters for RT
     alphaB:                 2.59e-13                    # (Conditional) (if useparams=1) The case B recombination coefficient for hydrogen (cgs)
     beta:                   3.1e-16                   # (Conditional) (if useparams=1) The collisional ionization coefficient for hydrogen (cgs)
 
+
+ionizing_photon_energy_erg is the photon energy averaged within a frequency bin, given the radiation spectrum. In the default case, 
+the first value corresponds to the bin from HI ionizing frequency to HeI ionizing frequency.
+The second value is from HeI ionizing frequency to HeII ionizing frequency.
+The third value is above HeII ionizing frequency.
+The default values are calculated with T=1e5 K blackbody spectrum.
+
+sigma_cross is also cross-section averaged within a frequency bin. 
 
 Currently, SPHM1RT uses CVODE in SUNDIALS to solve non-equilibrium hydrogen and helium thermochemistry in three frequency bins,
 from HI-HeII, HeII-HeIII and HeIII-inf. The precise coefficients will be published in Chan et al. in prep.,
