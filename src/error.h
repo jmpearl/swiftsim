@@ -183,4 +183,30 @@ extern int engine_rank;
   })
 #endif
 
+/**
+ * @brief Macro to trace a cell throughout the code
+ *
+ */
+#define PROBLEMCELL1 36
+#define PROBLEMCELL2 40
+
+#ifdef WITH_MPI
+extern int engine_rank;
+#define celltrace(c, s, ...)                                              \
+  ({                                                                      \
+    if (c->cellID == PROBLEMCELL1 || c->cellID == PROBLEMCELL2)           \
+    printf("[%04i] %s %s: cell %lld " s "\n", engine_rank,                \
+    clocks_get_timesincestart(), __FUNCTION__, c->cellID, ##__VA_ARGS__); \
+  })
+#else
+#define celltrace(c, s, ...)                                                      \
+  ({                                                                              \
+    if (c->cellID == PROBLEMCELL1 || c->cellID == PROBLEMCELL2)                   \
+    printf("%s %s: cell %lld " s "\n", clocks_get_timesincestart(), __FUNCTION__, \
+           c->cellID, ##__VA_ARGS__);                                             \
+  })
+#endif
+
+
+
 #endif /* SWIFT_ERROR_H */
