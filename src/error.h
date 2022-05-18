@@ -192,23 +192,22 @@ extern int engine_rank;
 
 #ifdef WITH_MPI
 extern int engine_rank;
-#define celltrace(c, s, ...)                                              \
-  ({                                                                      \
-    if (c->cellID == PROBLEMCELL1 || c->cellID == PROBLEMCELL2)           \
-    printf("[%04i] %s %s: cell %lld " s "\n", engine_rank,                \
-    clocks_get_timesincestart(), __FUNCTION__, c->cellID, ##__VA_ARGS__); \
-    fflush(stdout);                                                       \
+#define celltrace(c, s, ...)                                                \
+  ({                                                                        \
+    if (c->cellID == PROBLEMCELL1 || c->cellID == PROBLEMCELL2)             \
+      printf("[%04i] %s %s: TRACE cell %lld local=%d " s "\n", engine_rank, \
+             clocks_get_timesincestart(), __FUNCTION__, c->cellID,          \
+             c->nodeID == engine_rank, ##__VA_ARGS__);                      \
+    fflush(stdout);                                                         \
   })
 #else
-#define celltrace(c, s, ...)                                                      \
-  ({                                                                              \
-    if (c->cellID == PROBLEMCELL1 || c->cellID == PROBLEMCELL2)                   \
-    printf("%s %s: cell %lld " s "\n", clocks_get_timesincestart(), __FUNCTION__, \
-           c->cellID, ##__VA_ARGS__);                                             \
-    fflush(stdout);                                                               \
+#define celltrace(c, s, ...)                                          \
+  ({                                                                  \
+    if (c->cellID == PROBLEMCELL1 || c->cellID == PROBLEMCELL2)       \
+      printf("%s %s: cell %lld " s "\n", clocks_get_timesincestart(), \
+             __FUNCTION__, c->cellID, ##__VA_ARGS__);                 \
+    fflush(stdout);                                                   \
   })
 #endif
-
-
 
 #endif /* SWIFT_ERROR_H */
