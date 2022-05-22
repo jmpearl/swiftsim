@@ -231,8 +231,8 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
       }
     }
   } else {
-    rt_compute_rate_coefficients(T_cgs, onthespot, alphalist, betalist, Gammalist,
-                              sigmalist, epsilonlist);
+    rt_compute_rate_coefficients(T_cgs, onthespot, alphalist, betalist,
+                                 Gammalist, sigmalist, epsilonlist);
   }
 
   data.useparams = rt_props->useparams;
@@ -259,7 +259,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
     errorHI = 1;
   } else {
     rt_enforce_constraint_equations(new_abundances, metal_mass_fraction,
-                                 finish_abundances);
+                                    finish_abundances);
   }
 
   if ((max_relative_change < rt_props->explicitRelTolerance) &&
@@ -449,7 +449,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
     if (new_abundances[rt_sp_HI] > 1.01)
       error("HI fraction bigger than one after the CVODE solver");
     rt_enforce_constraint_equations(new_abundances, metal_mass_fraction,
-                                 finish_abundances);
+                                    finish_abundances);
     for (int spec = 0; spec < rt_species_count; spec++) {
       if (finish_abundances[spec] > 0.f) {
         if (finish_abundances[spec] < FLT_MAX) {

@@ -162,8 +162,8 @@ INLINE static void rt_get_index_to_species(int aindex[3]) {
  * @return betalist  coefficients of collisional ionization
  */
 INLINE static void rt_compute_alphabeta_cgs(double T_cgs, int onthespot,
-                                         double alphalist[rt_species_count],
-                                         double betalist[rt_species_count]) {
+                                            double alphalist[rt_species_count],
+                                            double betalist[rt_species_count]) {
 
   if (T_cgs == 0.0) error("Temperature is absolute zero.");
   const double lambdaT = 315614.0 / T_cgs;
@@ -368,8 +368,8 @@ INLINE static void rt_compute_cooling_gamma_cgs(
  * @return sigmalist  photo-ionization cross section in cm^2
  * @return epsilonlist  averaged thermal energy per ionization in erg
  */
-INLINE static void rt_compute_photoionization_rate_cgs(double sigmalist[3][3],
-                                                    double epsilonlist[3][3]) {
+INLINE static void rt_compute_photoionization_rate_cgs(
+    double sigmalist[3][3], double epsilonlist[3][3]) {
   /* the first index denotes frequency bins; the second index denotes species */
   /* HI: index 0 */
   sigmalist[0][0] = 2.99e-18;
@@ -676,16 +676,17 @@ INLINE static void rt_compute_explicit_thermochemistry_solution(
   if (dt_cgs == 0.0) error("dt_cgs==%e", dt_cgs);
   if (n_H_cgs == 0.0) error("n_H_cgs==%e", n_H_cgs);
 
-  rt_compute_radiation_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, sigmalist,
-                         aindex, absorption_rate);
+  rt_compute_radiation_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs,
+                            sigmalist, aindex, absorption_rate);
 
-  rt_compute_chemistry_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, alphalist,
-                         betalist, sigmalist, aindex, chemistry_rates);
+  rt_compute_chemistry_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs,
+                            alphalist, betalist, sigmalist, aindex,
+                            chemistry_rates);
 
   double Lambda_net_cgs;
   Lambda_net_cgs =
-      rt_compute_cooling_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs, Gammalist,
-                           sigmalist, epsilonlist, aindex);
+      rt_compute_cooling_rate(n_H_cgs, cred_cgs, abundances, ngamma_cgs,
+                              Gammalist, sigmalist, epsilonlist, aindex);
 
   /* record for maximum relative change */
   double max_relative_change_value = 0.0;

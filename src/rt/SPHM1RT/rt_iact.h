@@ -78,10 +78,10 @@ runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
   /* get the radiation energy within injection radius */
   /* we need it only when we need to redistribute the radiation energy */
   if (rt_props->reinject) {
-      float urad[RT_NGROUPS];
-      rt_get_physical_urad_multifrequency(pj, cosmo, urad);
-      for (int g = 0; g < RT_NGROUPS; g++) {
-        si->rt_data.emission_reinject[g] += mj * urad[g];
+    float urad[RT_NGROUPS];
+    rt_get_physical_urad_multifrequency(pj, cosmo, urad);
+    for (int g = 0; g < RT_NGROUPS; g++) {
+      si->rt_data.emission_reinject[g] += mj * urad[g];
     }
   }
 }

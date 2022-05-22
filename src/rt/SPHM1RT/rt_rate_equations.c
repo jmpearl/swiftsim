@@ -71,7 +71,7 @@ int rt_frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
   /* Update the species not in the network */
   double finish_abundances[rt_species_count];
   rt_enforce_constraint_equations(data->abundances, data->metal_mass_fraction,
-                               finish_abundances);
+                                  finish_abundances);
   for (int spec = 0; spec < rt_species_count; spec++) {
     data->abundances[spec] = finish_abundances[spec];
   }
@@ -110,12 +110,12 @@ int rt_frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
 
   double T_cgs =
       rt_convert_u_to_temp(data->k_B_cgs, data->m_H_cgs,
-                        data->metal_mass_fraction[rt_chemistry_element_H],
-                        u_cgs, data->abundances);
+                           data->metal_mass_fraction[rt_chemistry_element_H],
+                           u_cgs, data->abundances);
   const double T_min_cgs =
       rt_convert_u_to_temp(data->k_B_cgs, data->m_H_cgs,
-                        data->metal_mass_fraction[rt_chemistry_element_H],
-                        data->u_min_cgs, data->abundances);
+                           data->metal_mass_fraction[rt_chemistry_element_H],
+                           data->u_min_cgs, data->abundances);
   if (T_min_cgs > T_cgs) {
     T_cgs = T_min_cgs;
   }
@@ -163,23 +163,23 @@ int rt_frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
     }
   } else {
     rt_compute_rate_coefficients(T_cgs, data->onthespot, alphalist, betalist,
-                              Gammalist, sigmalist, epsilonlist);
+                                 Gammalist, sigmalist, epsilonlist);
   }
 
   // Compute creation and destruction rates
   double absorption_rate[3], chemistry_rates[rt_species_count];
 
   rt_compute_radiation_rate(data->n_H_cgs, data->cred_cgs, data->abundances,
-                         ngamma_cgs, sigmalist, aindex, absorption_rate);
+                            ngamma_cgs, sigmalist, aindex, absorption_rate);
 
   rt_compute_chemistry_rate(data->n_H_cgs, data->cred_cgs, data->abundances,
-                         ngamma_cgs, alphalist, betalist, sigmalist, aindex,
-                         chemistry_rates);
+                            ngamma_cgs, alphalist, betalist, sigmalist, aindex,
+                            chemistry_rates);
 
   double Lambda_net_cgs;
-  Lambda_net_cgs = rt_compute_cooling_rate(data->n_H_cgs, data->cred_cgs,
-                                        data->abundances, ngamma_cgs, Gammalist,
-                                        sigmalist, epsilonlist, aindex);
+  Lambda_net_cgs = rt_compute_cooling_rate(
+      data->n_H_cgs, data->cred_cgs, data->abundances, ngamma_cgs, Gammalist,
+      sigmalist, epsilonlist, aindex);
 
   int jcount = 0;
   /* Now set the output ydot vector for the chemical abundances */
