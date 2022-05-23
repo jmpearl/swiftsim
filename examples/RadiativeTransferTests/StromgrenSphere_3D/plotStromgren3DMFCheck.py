@@ -103,7 +103,7 @@ def plot_compare(filename):
     ax[1].set_yscale("log")
     ax[1].set_xlim([0, boxsize[0] / 2.0])
     ax[1].legend(loc="best")
-    
+
     plt.tight_layout()
     figname = filename[:-5]
     figname += "-Stromgren3DMF.png"
@@ -112,6 +112,6 @@ def plot_compare(filename):
 
 
 if __name__ == "__main__":
-    snaplist = spt.get_snapshot_list(snapshot_base,plot_all,snapnr)
+    snaplist = spt.get_snapshot_list(snapshot_base, plot_all, snapnr)
     for f in snaplist:
         plot_compare(f)

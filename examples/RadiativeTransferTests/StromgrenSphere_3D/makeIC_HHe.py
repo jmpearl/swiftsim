@@ -4,7 +4,7 @@
 # Add a single star in the center of a glass distribution
 # The gas is set up with a mixture of hydrogen and helium
 # with 75% hydrogen and 25% helium in mass.
-# This initial condition is comparable to Section 5.3.2 of 
+# This initial condition is comparable to Section 5.3.2 of
 # Pawlik & Schaye 2011 doi:10.1111/j.1365-2966.2010.18032.x.
 # ---------------------------------------------------------------------
 

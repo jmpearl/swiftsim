@@ -234,7 +234,7 @@ def plot_photons(filename, emin, emax, fmin, fmax):
             L = const_emission_rates[group_index]
         elif scheme.startswith("SPH M1closure"):
             units = data.units
-            unit_l_in_cgs = units.length.in_cgs() 
+            unit_l_in_cgs = units.length.in_cgs()
             unit_v_in_cgs = (units.length / units.time).in_cgs()
             unit_m_in_cgs = units.mass.in_cgs()
             emissionstr = meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8")

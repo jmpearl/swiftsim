@@ -95,6 +95,6 @@ def plot_analytic_compare(filename):
 
 
 if __name__ == "__main__":
-    snaplist = spt.get_snapshot_list(snapshot_base,plot_all,snapnr)
+    snaplist = spt.get_snapshot_list(snapshot_base, plot_all, snapnr)
     for f in snaplist:
         plot_analytic_compare(f)

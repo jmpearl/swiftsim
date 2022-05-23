@@ -53,6 +53,7 @@ except IndexError:
 
 snapshot_base = "output_HHe"
 
+
 def plot_compare(filename):
     # Read in data first
     print("working on", filename)
@@ -157,6 +158,6 @@ def plot_compare(filename):
 
 
 if __name__ == "__main__":
-    snaplist = spt.get_snapshot_list(snapshot_base,plot_all,snapnr)
+    snaplist = spt.get_snapshot_list(snapshot_base, plot_all, snapnr)
     for f in snaplist:
         plot_compare(f)
