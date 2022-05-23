@@ -97,10 +97,12 @@ runner_iact_nonsym_rt_injection_prep(const float r2, const float *dx,
  * @param pj Hydro particle.
  * @param a Current scale factor.
  * @param H Current Hubble parameter.
+ * @param rt_props Properties of the RT scheme.
  */
 __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
     const float r2, float *dx, const float hi, const float hj,
-    struct spart *restrict si, struct part *restrict pj, float a, float H) {
+    struct spart *restrict si, struct part *restrict pj, float a, float H,
+    const struct rt_props *rt_props) {
 
   /* If the star doesn't have any neighbours, we
    * have nothing to do here. */
@@ -147,7 +149,7 @@ __attribute__((always_inline)) INLINE static void runner_iact_rt_inject(
   const float cred = rt_get_comoving_cred(pj);
   for (int g = 0; g < RT_NGROUPS; g++) {
     /* Inject energy. */
-    if (pj->rt_data.params.reinject) {
+    if (rt_props->reinject) {
       new_urad = (si->rt_data.emission_this_step[g] +
                   si->rt_data.emission_reinject[g]) *
                  injection_weight * tot_weight_inv * mj_inv;

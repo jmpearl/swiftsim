@@ -88,9 +88,6 @@ struct rt_part_data {
     /*! reduced speed of light (physical) */
     float cred_phys;
 
-    /*! switch to reinject radiation from injection radius */
-    int reinject;
-
   } params;
 
   /* Store hydro information in a separate struct. */

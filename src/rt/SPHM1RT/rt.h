@@ -112,8 +112,6 @@ __attribute__((always_inline)) INLINE static void rt_first_init_part(
 
   rpd->params.cred = rt_props->cred_comoving;
 
-  rpd->params.reinject = rt_props->reinject;
-
   rpd->force.f = 1.0f;
 
   rpd->dt = 1.0f;
