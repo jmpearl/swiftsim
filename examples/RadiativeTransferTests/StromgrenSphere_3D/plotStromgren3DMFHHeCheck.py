@@ -125,7 +125,7 @@ def plot_compare(filename):
     xHeII = sA.HeII
     xHeIII = sA.HeIII
 
-    outdict = spt.get_TT1Dsolution_HHe()
+    outdict = get_TT1Dsolution_HHe()
 
     fig, ax = plt.subplots(1, 2)
 
@@ -168,7 +168,14 @@ def plot_compare(filename):
     ax[0].set_yscale("log")
     ax[0].set_xlim([0, 5.4 * 1.3])
     ax[0].set_ylim([1e-5, 1.1])
-    ax[0].legend(loc="best", fontsize=12)
+    #ax[0].legend(loc="best", fontsize=12)
+    TT1D_line = mlines.Line2D([], [], lw=2, ls="dashed", label="TT1D", color="k")
+    first_legend = ax[1].legend(
+        handles=[TT1D_line],
+        loc="best",
+        fontsize=10,
+    )
+    ax[1].add_artist(first_legend) 
 
     ax[1].scatter(r, data.gas.T, **scatterplot_kwargs)
     ax[1].plot(
@@ -188,12 +195,14 @@ def plot_compare(filename):
     HeI_line = mlines.Line2D([], [], lw=2, ls="dashed", label="HeI", color="b")
     HeII_line = mlines.Line2D([], [], lw=2, ls="dashed", label="HeII", color="g")
     HeIII_line = mlines.Line2D([], [], lw=2, ls="dashed", label="HeIII", color="y")
-    first_legend = ax[1].legend(
+    first_legend = ax[0].legend(
         handles=[HI_line, HII_line, HeI_line, HeII_line, HeIII_line],
         loc="best",
-        fontsize=12,
+        ncol=2,
+        fontsize=10,
     )
-    ax[1].add_artist(first_legend)
+    ax[0].add_artist(first_legend)
+
 
     plt.tight_layout()
     figname = filename[:-5]

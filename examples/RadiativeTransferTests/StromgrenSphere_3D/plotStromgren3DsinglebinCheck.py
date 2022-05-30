@@ -77,7 +77,7 @@ def neutralfraction3d(rfunc, nH, sigma, alphaB, dNinj, rini):
     return xn
 
 
-def get_analytic_neutralfraction_stromgren3D(data):
+def get_analytic_neutralfraction_stromgren3D(data,scheme):
     meta = data.metadata
     rho = data.gas.densities
     rini_value = 0.1
@@ -86,11 +86,11 @@ def get_analytic_neutralfraction_stromgren3D(data):
     nH = np.mean(rho.to("g/cm**3") / unyt.proton_mass)
 
     if scheme.startswith("SPH M1closure"):
-        sigma_cross = trim_paramstr(
+        sigma_cross = spt.trim_paramstr(
             meta.parameters["SPHM1RT:sigma_cross"].decode("utf-8")
         ) * unyt.unyt_array(1.0, "cm**2")
         sigma = sigma_cross[0]
-        alphaB = trim_paramstr(
+        alphaB = spt.trim_paramstr(
             meta.parameters["SPHM1RT:alphaB"].decode("utf-8")
         ) * unyt.unyt_array(1.0, "cm**3/s")
     else:
@@ -100,13 +100,13 @@ def get_analytic_neutralfraction_stromgren3D(data):
     unit_v_in_cgs = (units.length / units.time).in_cgs()
     unit_m_in_cgs = units.mass.in_cgs()
     star_emission_rates = (
-        trim_paramstr(meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8"))
+        spt.trim_paramstr(meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8"))
         * unit_m_in_cgs
         * unit_v_in_cgs ** 3
         / unit_l_in_cgs
     )
     ionizing_photon_energy_erg = (
-        trim_paramstr(
+        spt.trim_paramstr(
             meta.parameters["SPHM1RT:ionizing_photon_energy_erg"].decode("utf-8")
         )
         * unyt.erg
