@@ -94,9 +94,13 @@ __attribute__((always_inline)) INLINE static void rt_reset_part(
  * @brief First initialisation of the RT hydro particle data.
  *
  * @param p particle to work on
+ * @param cosmo #cosmology data structure.
+ * @param rt_props RT properties struct
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_part(
-    struct part* restrict p, const struct rt_props* restrict rt_props) {
+    struct part* restrict p, 
+    const struct cosmology *cosmo,
+    const struct rt_props* restrict rt_props) {
 
   rt_init_part(p);
   rt_reset_part(p);

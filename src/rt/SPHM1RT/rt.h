@@ -93,11 +93,15 @@ __attribute__((always_inline)) INLINE static void rt_reset_part(
 
 /**
  * @brief First initialisation of the RT hydro particle data.
+ *
  * @param p particle to work on
+ * @param cosmo #cosmology data structure.
  * @param rt_props RT properties struct
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_part(
-    struct part* restrict p, const struct rt_props* restrict rt_props) {
+    struct part* restrict p, 
+    const struct cosmology *cosmo,
+    const struct rt_props* restrict rt_props) {
 
   struct rt_part_data* rpd = &p->rt_data;
 
@@ -109,8 +113,7 @@ __attribute__((always_inline)) INLINE static void rt_first_init_part(
   }
 
   /* We can get parameters for diffusion (force loop) */
-
-  rpd->params.cred = rt_props->cred_comoving;
+  rpd->params.cred = rt_props->cred_phys * cosmo->a_inv;
 
   rpd->force.f = 1.0f;
 

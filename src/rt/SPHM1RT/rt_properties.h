@@ -42,9 +42,6 @@ struct rt_props {
   /* reduced speed of light in code unit (physical) */
   float cred_phys;
 
-  /* reduced speed of light in code unit (comoving) */
-  float cred_comoving;
-
   /*! initial opacity */
   float initialchi[RT_NGROUPS];
 
@@ -225,9 +222,6 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
 
   /* TK reminder: rtp->cred_phys is physical */
   rtp->cred_phys = cred_phys;
-  /* TK reminder: rtp->cred_comoving is comoving (valid only in the first step)
-   */
-  rtp->cred_comoving = cred_phys * cosmo->a_inv;
 
   /* get initial opacity in code unit */
   int errorint = parser_get_opt_param_float_array(params, "SPHM1RT:chi",
