@@ -182,7 +182,7 @@ def get_snapshot_list(snapshot_basename="output", plot_all=True, snapnr=0):
 def get_imf(scheme, data):
     """
     Get the ion mass fraction (imf) according to the scheme.
-    return a class with ion mass function for species X, 
+    return a class with ion mass fraction for species X, 
     including HI, HII, HeI, HeII, HeIII:
     The ion mass function can be accessed through: imf.X
     The unit is in m_X/m_tot, where m_X is the mass in species X
@@ -212,7 +212,7 @@ def get_abundances(scheme, data):
     Get the species abundance according to the scheme
     return a class with normalized number densities for abunance X, 
     including HI, HII, HeI, HeII, HeIII:
-    The ion mass function can be accessed through: sA.X
+    The abundances can be accessed through: sA.X
     The unit is in n_X/n_H, where n_X is the number density of species X
     and n_H is the number density of hydrogen.
     """
@@ -255,7 +255,6 @@ def trim_paramstr(paramstr):
     if paramstr.endswith("]"):
         paramstr = paramstr[:-1]
 
-    # transform string values to floats with unyts
     params = paramstr.split(",")
     paramtrimmed = []
     for er in params:

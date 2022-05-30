@@ -110,11 +110,15 @@ Thermo-chemistry parameters for RT
     beta:                   3.1e-16                   # (Conditional) (if useparams=1) The collisional ionization coefficient for hydrogen (cgs)
 
 
-ionizing_photon_energy_erg is the photon energy averaged within a frequency bin, given the radiation spectrum. In the default case, 
+ionizing_photon_energy_erg is the photon energy averaged over frequency within a frequency bin, given the radiation spectrum. In the default case, 
 the first value corresponds to the bin from HI ionizing frequency to HeI ionizing frequency.
 The second value is from HeI ionizing frequency to HeII ionizing frequency.
 The third value is above HeII ionizing frequency.
 The default values are calculated with T=1e5 K blackbody spectrum.
+We currently assume the spectral shape is unchanged and universal, i.e. T=1e5 K blackbody spectrum everywhere. 
+ionizing_photon_energy_erg is used to convert photon energy density to photon number density, photo-heating, and photo-ionization.
+
+
 
 sigma_cross is also cross-section averaged within a frequency bin. 
 

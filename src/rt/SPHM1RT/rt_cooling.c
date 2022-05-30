@@ -63,7 +63,7 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
 
   struct rt_part_data* rpd = &p->rt_data;
 
-  struct UserData data; /* data for CVODE */
+  struct RTUserData data; /* data for CVODE */
 
   const double dt_cgs = dt * units_cgs_conversion_factor(us, UNIT_CONV_TIME);
 
@@ -82,7 +82,8 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
 
   int useparams = rt_props->useparams;
 
-  /* adapt on the spot approximation by default */
+  /* adopt on the spot approximation (OTSA) by default */
+  /* TODO: currently there is no non-OTSA implementation; to do in the future */
   int onthespot = rt_props->onthespot;
   data.onthespot = onthespot;
 

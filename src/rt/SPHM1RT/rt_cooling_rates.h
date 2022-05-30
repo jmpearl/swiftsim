@@ -27,7 +27,7 @@
 #include <nvector/nvector_serial.h>
 #include <sundials/sundials_types.h>
 
-struct UserData {
+struct RTUserData {
 
   // void *cvode_mem;           /*!< Pointer to the CVODE memory. */
 
@@ -784,7 +784,7 @@ INLINE static void rt_initialize_abundances(
  * @param t Current time.
  * @param y Vector containing the variables to be integrated.
  * @param ydot Vector containing the time derivatives of the variables.
- * @param user_data The #UserData struct containing the input data.
+ * @param user_data The #RTUserData struct containing the input data.
  */
 int rt_frateeq(realtype t, N_Vector y, N_Vector ydot, void *user_data);
 
