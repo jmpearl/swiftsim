@@ -51,17 +51,24 @@ scatterplot_kwargs = {
 }
 
 # Read in cmdline arg: Are we plotting only one snapshot, or all?
+# WARNING: The reference solution is comparable with snapshot_102 only
 plot_all = False
 try:
     snapnr = int(sys.argv[1])
 except IndexError:
     plot_all = True
     snapnr = -1
+    print("WARNING: plotting all snapshots, but you should compare the reference solution with snapshot_102 only")
 
 snapshot_base = "output_MF"
 
 
 def get_TT1Dsolution():
+    """
+    Reading the reference solution from the test in Section 5.2.2 
+    of Pawlik & Schaye 2011 doi:10.1111/j.1365-2966.2010.18032.x
+    Output the radius, neutral fraction, and temperature at t = 100Myr
+    """
     TT1D_runit = 5.4 * unyt.kpc  # kpc
     data = np.loadtxt("data/xTT1D_Stromgren100Myr.txt", delimiter=",")
     rtt1dlist = data[:, 0] * TT1D_runit

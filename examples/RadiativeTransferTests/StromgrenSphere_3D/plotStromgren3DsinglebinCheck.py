@@ -55,22 +55,31 @@ scatterplot_kwargs = {
 }
 
 # Read in cmdline arg: Are we plotting only one snapshot, or all?
+# WARNING: The reference solution is comparable with snapshot_500 only
 plot_all = False
 try:
     snapnr = int(sys.argv[1])
 except IndexError:
     plot_all = True
     snapnr = -1
+    print("WARNING: plotting all snapshots, but you should compare the reference solution with snapshot_500 only")
 
 snapshot_base = "output_singlebin"
 
 
 def fn_neutralfraction3d(xn, rn):
-    """this is the rhs of the ODE to integrate, i.e. dx/drn=fn(x,r)=x*(1-x)/(1+x)*(2/rn+x)"""
+    """
+    ODE for Stromgren sphere 3D:
+    this is the rhs of the ODE to integrate, i.e. dx/drn=fn(x,r)=x*(1-x)/(1+x)*(2/rn+x)
+    """
     return xn * (1.0 - xn) / (1.0 + xn) * (2.0 / rn + xn)
 
 # analytic solution
-def neutralfraction3d(rfunc, nH, sigma, alphaB, dNinj, rini):
+def Stromgren3D_neutralfraction3d(rfunc, nH, sigma, alphaB, dNinj, rini):
+    """
+    This function integrates the ODE for Stromgren sphere 3D
+    Output the neutral fraction xn as a function of radius rfunc
+    """    
     xn0 = nH * alphaB * 4.0 * np.pi / sigma / dNinj * rini * rini
     rnounit = rfunc * nH * sigma
     xn = odeint(fn_neutralfraction3d, xn0, rnounit)
@@ -78,6 +87,12 @@ def neutralfraction3d(rfunc, nH, sigma, alphaB, dNinj, rini):
 
 
 def get_analytic_neutralfraction_stromgren3D(data,scheme):
+    """
+    This function reads the parameters from snapshot,
+    and then integrates the ODE for Stromgren sphere 3D
+    Output the neutral fraction xn and radius r_ana
+    Work only for SPHM1RT (for now)
+    """      
     meta = data.metadata
     rho = data.gas.densities
     rini_value = 0.1
@@ -94,7 +109,8 @@ def get_analytic_neutralfraction_stromgren3D(data,scheme):
             meta.parameters["SPHM1RT:alphaB"].decode("utf-8")
         ) * unyt.unyt_array(1.0, "cm**3/s")
     else:
-        print("Currently get_analytic_neutralfraction_stromgren3D can only work with SPHM1RT")
+        print("Error: Currently get_analytic_neutralfraction_stromgren3D can only work with SPHM1RT")
+        exit()
     units = data.units
     unit_l_in_cgs = units.length.in_cgs()
     unit_v_in_cgs = (units.length / units.time).in_cgs()
@@ -112,7 +128,7 @@ def get_analytic_neutralfraction_stromgren3D(data,scheme):
         * unyt.erg
     )
     dNinj = star_emission_rates[1] / ionizing_photon_energy_erg[0]
-    xn = neutralfraction3d(r_ana, nH, sigma, alphaB, dNinj, rini)
+    xn = Stromgren3D_neutralfraction3d(r_ana, nH, sigma, alphaB, dNinj, rini)
     return r_ana, xn
 
 

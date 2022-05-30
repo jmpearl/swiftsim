@@ -126,9 +126,12 @@ def get_abundances(scheme, data):
         sA = data.gas.rt_species_abundances
     return sA
 
-
-def trim_paramstr(paramstr):
     # clean string up
+def trim_paramstr(paramstr):
+    """
+    clean up strings in the form [x,y,z,...]
+    and return an array: array([x,y,z,...])
+    """
     paramstr = paramstr.strip()
     if paramstr.startswith("["):
         paramstr = paramstr[1:]

@@ -45,12 +45,14 @@ mpl.rcParams.update(params)
 scatterplot_kwargs = {"alpha": 0.1, "s": 4, "marker": ".", "linewidth": 0.0}
 
 # Read in cmdline arg: Are we plotting only one snapshot, or all?
+# WARNING: The reference solution is comparable with snapshot_102 only
 plot_all = False
 try:
     snapnr = int(sys.argv[1])
 except IndexError:
     plot_all = True
     snapnr = -1
+    print("WARNING: plotting all snapshots, but you should compare the reference solution with snapshot_102 only")
 
 snapshot_base = "output_HHe"
 
@@ -59,6 +61,11 @@ snapshot_base = "output_HHe"
 
 
 def get_TT1Dsolution_HHe():
+    """
+    Reading the reference solution from the test in Section 5.3.2 
+    of Pawlik & Schaye 2011 doi:10.1111/j.1365-2966.2010.18032.x
+    Output the radius, neutral fraction, and temperature at t = 100 Myr
+    """
     TT1D_runit = 5.4 * unyt.kpc  # kpc
     data = np.loadtxt("data/xHITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
     rHItt1dlist = data[:, 0] * TT1D_runit
