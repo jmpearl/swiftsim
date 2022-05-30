@@ -12,6 +12,7 @@ import matplotlib.lines as mlines
 import numpy as np
 import sys
 import stromgren_plotting_tools as spt
+import unyt
 
 # Plot parameters
 params = {
@@ -54,12 +55,56 @@ except IndexError:
 snapshot_base = "output_HHe"
 
 
+
+
+
+def get_TT1Dsolution_HHe():
+    TT1D_runit = 5.4 * unyt.kpc  # kpc
+    data = np.loadtxt("data/xHITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHItt1dlist = data[:, 0] * TT1D_runit
+    xHItt1dlist = 10 ** data[:, 1]
+
+    data = np.loadtxt("data/xHIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHIItt1dlist = data[:, 0] * TT1D_runit
+    xHIItt1dlist = 10 ** data[:, 1]
+
+    data = np.loadtxt("data/xHeITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHeItt1dlist = data[:, 0] * TT1D_runit
+    xHeItt1dlist = 10 ** data[:, 1]
+
+    data = np.loadtxt("data/xHeIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHeIItt1dlist = data[:, 0] * TT1D_runit
+    xHeIItt1dlist = 10 ** data[:, 1]
+
+    data = np.loadtxt("data/xHeIIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rHeIIItt1dlist = data[:, 0] * TT1D_runit
+    xHeIIItt1dlist = 10 ** data[:, 1]
+
+    data = np.loadtxt("data/TTT1D_Stromgren100Myr_HHe.txt", delimiter=",")
+    rTtt1dlist = data[:, 0] * TT1D_runit
+    Ttt1dlist = 10 ** data[:, 1] * unyt.K
+
+    outdict = {}
+    outdict["rHItt1dlist"] = rHItt1dlist
+    outdict["xHItt1dlist"] = xHItt1dlist
+    outdict["rHIItt1dlist"] = rHIItt1dlist
+    outdict["xHIItt1dlist"] = xHIItt1dlist
+    outdict["rHeItt1dlist"] = rHeItt1dlist
+    outdict["xHeItt1dlist"] = xHeItt1dlist
+    outdict["rHeIItt1dlist"] = rHeIItt1dlist
+    outdict["xHeIItt1dlist"] = xHeIItt1dlist
+    outdict["rHeIIItt1dlist"] = rHeIIItt1dlist
+    outdict["xHeIIItt1dlist"] = xHeIIItt1dlist
+    outdict["rTtt1dlist"] = rTtt1dlist
+    outdict["Ttt1dlist"] = Ttt1dlist
+    return outdict
+
+
 def plot_compare(filename):
     # Read in data first
     print("working on", filename)
     data = swiftsimio.load(filename)
     meta = data.metadata
-    boxsize = meta.boxsize
     scheme = str(meta.subgrid_scheme["RT Scheme"].decode("utf-8"))
     gamma = meta.hydro_scheme["Adiabatic index"][0]
 

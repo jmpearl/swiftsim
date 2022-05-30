@@ -13,6 +13,8 @@ import matplotlib as mpl
 import numpy as np
 import sys
 import stromgren_plotting_tools as spt
+import unyt
+from scipy.integrate import odeint
 
 
 # Plot parameters
@@ -63,6 +65,57 @@ except IndexError:
 snapshot_base = "output_singlebin"
 
 
+def fn_neutralfraction3d(xn, rn):
+    """this is the rhs of the ODE to integrate, i.e. dx/drn=fn(x,r)=x*(1-x)/(1+x)*(2/rn+x)"""
+    return xn * (1.0 - xn) / (1.0 + xn) * (2.0 / rn + xn)
+
+# analytic solution
+def neutralfraction3d(rfunc, nH, sigma, alphaB, dNinj, rini):
+    xn0 = nH * alphaB * 4.0 * np.pi / sigma / dNinj * rini * rini
+    rnounit = rfunc * nH * sigma
+    xn = odeint(fn_neutralfraction3d, xn0, rnounit)
+    return xn
+
+
+def get_analytic_neutralfraction_stromgren3D(data):
+    meta = data.metadata
+    rho = data.gas.densities
+    rini_value = 0.1
+    r_ana = np.linspace(rini_value, 10.0, 100) * unyt.kpc
+    rini = rini_value * unyt.kpc
+    nH = np.mean(rho.to("g/cm**3") / unyt.proton_mass)
+
+    if scheme.startswith("SPH M1closure"):
+        sigma_cross = trim_paramstr(
+            meta.parameters["SPHM1RT:sigma_cross"].decode("utf-8")
+        ) * unyt.unyt_array(1.0, "cm**2")
+        sigma = sigma_cross[0]
+        alphaB = trim_paramstr(
+            meta.parameters["SPHM1RT:alphaB"].decode("utf-8")
+        ) * unyt.unyt_array(1.0, "cm**3/s")
+    else:
+        print("Currently get_analytic_neutralfraction_stromgren3D can only work with SPHM1RT")
+    units = data.units
+    unit_l_in_cgs = units.length.in_cgs()
+    unit_v_in_cgs = (units.length / units.time).in_cgs()
+    unit_m_in_cgs = units.mass.in_cgs()
+    star_emission_rates = (
+        trim_paramstr(meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8"))
+        * unit_m_in_cgs
+        * unit_v_in_cgs ** 3
+        / unit_l_in_cgs
+    )
+    ionizing_photon_energy_erg = (
+        trim_paramstr(
+            meta.parameters["SPHM1RT:ionizing_photon_energy_erg"].decode("utf-8")
+        )
+        * unyt.erg
+    )
+    dNinj = star_emission_rates[1] / ionizing_photon_energy_erg[0]
+    xn = neutralfraction3d(r_ana, nH, sigma, alphaB, dNinj, rini)
+    return r_ana, xn
+
+
 def plot_analytic_compare(filename):
     # Read in data first
     print("working on", filename)
@@ -79,7 +132,7 @@ def plot_analytic_compare(filename):
     imf = spt.get_imf(scheme, data)
     xHI = imf.HI / (imf.HI + imf.HII)
 
-    r_ana, xn = spt.get_analytic_solution(data)
+    r_ana, xn = get_analytic_neutralfraction_stromgren3D(data, scheme)
     plt.scatter(r, xHI, **scatterplot_kwargs)
     plt.plot(r_ana, xn)
     plt.ylabel("Neutral Fraction")

@@ -2,114 +2,9 @@ import os
 import numpy as np
 import unyt
 import copy
-from scipy.integrate import odeint
 
 
-# analytic solution
-def neutralfraction3d(rfunc, nH, sigma, alphaB, dNinj, rini):
-    def fn(xn, rn):
-        """this is the rhs of the ODE to integrate, i.e. dx/drn=fn(x,r)=x*(1-x)/(1+x)*(2/rn+x)"""
-        return xn * (1.0 - xn) / (1.0 + xn) * (2.0 / rn + xn)
-
-    xn0 = nH * alphaB * 4.0 * np.pi / sigma / dNinj * rini * rini
-    rnounit = rfunc * nH * sigma
-    xn = odeint(fn, xn0, rnounit)
-    return xn
-
-
-def get_analytic_solution(data):
-    meta = data.metadata
-    rho = data.gas.densities
-    rini_value = 0.1
-    r_ana = np.linspace(rini_value, 10.0, 100) * unyt.kpc
-    rini = rini_value * unyt.kpc
-    nH = np.mean(rho.to("g/cm**3") / unyt.proton_mass)
-    sigma_cross = trim_paramstr(
-        meta.parameters["SPHM1RT:sigma_cross"].decode("utf-8")
-    ) * unyt.unyt_array(1.0, "cm**2")
-    sigma = sigma_cross[0]
-    alphaB = trim_paramstr(
-        meta.parameters["SPHM1RT:alphaB"].decode("utf-8")
-    ) * unyt.unyt_array(1.0, "cm**3/s")
-    units = data.units
-    unit_l_in_cgs = units.length.in_cgs()
-    unit_v_in_cgs = (units.length / units.time).in_cgs()
-    unit_m_in_cgs = units.mass.in_cgs()
-    star_emission_rates = (
-        trim_paramstr(meta.parameters["SPHM1RT:star_emission_rates"].decode("utf-8"))
-        * unit_m_in_cgs
-        * unit_v_in_cgs ** 3
-        / unit_l_in_cgs
-    )
-    ionizing_photon_energy_erg = (
-        trim_paramstr(
-            meta.parameters["SPHM1RT:ionizing_photon_energy_erg"].decode("utf-8")
-        )
-        * unyt.erg
-    )
-    dNinj = star_emission_rates[1] / ionizing_photon_energy_erg[0]
-    xn = neutralfraction3d(r_ana, nH, sigma, alphaB, dNinj, rini)
-    return r_ana, xn
-
-
-def get_TT1Dsolution():
-    TT1D_runit = 5.4 * unyt.kpc  # kpc
-    data = np.loadtxt("data/xTT1D_Stromgren100Myr.txt", delimiter=",")
-    rtt1dlist = data[:, 0] * TT1D_runit
-    xtt1dlist = 10 ** data[:, 1]
-
-    data = np.loadtxt("data/TTT1D_Stromgren100Myr.txt", delimiter=",")
-    rTtt1dlist = data[:, 0] * TT1D_runit
-    Ttt1dlist = 10 ** data[:, 1] * unyt.K
-
-    outdict = {}
-    outdict["rtt1dlist"] = rtt1dlist
-    outdict["xtt1dlist"] = xtt1dlist
-    outdict["rTtt1dlist"] = rTtt1dlist
-    outdict["Ttt1dlist"] = Ttt1dlist
-    return outdict
-
-
-def get_TT1Dsolution_HHe():
-    TT1D_runit = 5.4 * unyt.kpc  # kpc
-    data = np.loadtxt("data/xHITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
-    rHItt1dlist = data[:, 0] * TT1D_runit
-    xHItt1dlist = 10 ** data[:, 1]
-
-    data = np.loadtxt("data/xHIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
-    rHIItt1dlist = data[:, 0] * TT1D_runit
-    xHIItt1dlist = 10 ** data[:, 1]
-
-    data = np.loadtxt("data/xHeITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
-    rHeItt1dlist = data[:, 0] * TT1D_runit
-    xHeItt1dlist = 10 ** data[:, 1]
-
-    data = np.loadtxt("data/xHeIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
-    rHeIItt1dlist = data[:, 0] * TT1D_runit
-    xHeIItt1dlist = 10 ** data[:, 1]
-
-    data = np.loadtxt("data/xHeIIITT1D_Stromgren100Myr_HHe.txt", delimiter=",")
-    rHeIIItt1dlist = data[:, 0] * TT1D_runit
-    xHeIIItt1dlist = 10 ** data[:, 1]
-
-    data = np.loadtxt("data/TTT1D_Stromgren100Myr_HHe.txt", delimiter=",")
-    rTtt1dlist = data[:, 0] * TT1D_runit
-    Ttt1dlist = 10 ** data[:, 1] * unyt.K
-
-    outdict = {}
-    outdict["rHItt1dlist"] = rHItt1dlist
-    outdict["xHItt1dlist"] = xHItt1dlist
-    outdict["rHIItt1dlist"] = rHIItt1dlist
-    outdict["xHIItt1dlist"] = xHIItt1dlist
-    outdict["rHeItt1dlist"] = rHeItt1dlist
-    outdict["xHeItt1dlist"] = xHeItt1dlist
-    outdict["rHeIItt1dlist"] = rHeIItt1dlist
-    outdict["xHeIItt1dlist"] = xHeIItt1dlist
-    outdict["rHeIIItt1dlist"] = rHeIIItt1dlist
-    outdict["xHeIIItt1dlist"] = xHeIIItt1dlist
-    outdict["rTtt1dlist"] = rTtt1dlist
-    outdict["Ttt1dlist"] = Ttt1dlist
-    return outdict
+mamu = {"e": 0.0, "HI": 1.0, "HII": 1.0, "HeI": 4.0, "HeII": 4.0, "HeIII": 4.0}
 
 
 def mean_molecular_weight(XH0, XHp, XHe0, XHep, XHepp):
@@ -192,7 +87,6 @@ def get_imf(scheme, data):
         imf = data.gas.ion_mass_fractions
     elif scheme.startswith("SPH M1closure"):
         # atomic mass
-        mamu = {"e": 0.0, "HI": 1.0, "HII": 1.0, "HeI": 4.0, "HeII": 4.0, "HeIII": 4.0}
         mass_fraction_hydrogen = data.gas.rt_element_mass_fractions.hydrogen
         imf = copy.deepcopy(data.gas.rt_species_abundances)
         named_columns = data.gas.rt_species_abundances.named_columns
@@ -218,30 +112,16 @@ def get_abundances(scheme, data):
     """
     if scheme.startswith("GEAR M1closure"):
         # atomic mass
-        mamu = {"e": 0.0, "HI": 1.0, "HII": 1.0, "HeI": 4.0, "HeII": 4.0, "HeIII": 4.0}
         sA = copy.deepcopy(data.gas.ion_mass_fractions)
         mass_fraction_hydrogen = (
             data.gas.ion_mass_fractions.HI + data.gas.ion_mass_fractions.HII
         )
         # abundance is in n_X/n_H unit. We convert mass fraction to abundance by dividing mass fraction of H
-        abundance = data.gas.ion_mass_fractions.HI / mass_fraction_hydrogen / mamu["HI"]
-        setattr(sA, "HI", abundance)
-        abundance = (
-            data.gas.ion_mass_fractions.HII / mass_fraction_hydrogen / mamu["HII"]
-        )
-        setattr(sA, "HII", abundance)
-        abundance = (
-            data.gas.ion_mass_fractions.HeI / mass_fraction_hydrogen / mamu["HeI"]
-        )
-        setattr(sA, "HeI", abundance)
-        abundance = (
-            data.gas.ion_mass_fractions.HeII / mass_fraction_hydrogen / mamu["HeII"]
-        )
-        setattr(sA, "HeII", abundance)
-        abundance = (
-            data.gas.ion_mass_fractions.HeIII / mass_fraction_hydrogen / mamu["HeIII"]
-        )
-        setattr(sA, "HeIII", abundance)
+        sA.HI = data.gas.ion_mass_fractions.HI / mass_fraction_hydrogen / mamu["HI"]
+        sA.HII = data.gas.ion_mass_fractions.HII / mass_fraction_hydrogen / mamu["HII"]
+        sA.HeI = data.gas.ion_mass_fractions.HeI / mass_fraction_hydrogen / mamu["HeI"]
+        sA.HeII = data.gas.ion_mass_fractions.HeII / mass_fraction_hydrogen / mamu["HeII"]
+        sA.HeIII = data.gas.ion_mass_fractions.HeIII / mass_fraction_hydrogen / mamu["HeIII"]
     elif scheme.startswith("SPH M1closure"):
         sA = data.gas.rt_species_abundances
     return sA

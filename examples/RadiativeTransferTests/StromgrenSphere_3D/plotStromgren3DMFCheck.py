@@ -11,6 +11,7 @@ import matplotlib as mpl
 import numpy as np
 import sys
 import stromgren_plotting_tools as spt
+import unyt
 
 # Plot parameters
 params = {
@@ -60,6 +61,24 @@ except IndexError:
 snapshot_base = "output_MF"
 
 
+def get_TT1Dsolution():
+    TT1D_runit = 5.4 * unyt.kpc  # kpc
+    data = np.loadtxt("data/xTT1D_Stromgren100Myr.txt", delimiter=",")
+    rtt1dlist = data[:, 0] * TT1D_runit
+    xtt1dlist = 10 ** data[:, 1]
+
+    data = np.loadtxt("data/TTT1D_Stromgren100Myr.txt", delimiter=",")
+    rTtt1dlist = data[:, 0] * TT1D_runit
+    Ttt1dlist = 10 ** data[:, 1] * unyt.K
+
+    outdict = {}
+    outdict["rtt1dlist"] = rtt1dlist
+    outdict["xtt1dlist"] = xtt1dlist
+    outdict["rTtt1dlist"] = rTtt1dlist
+    outdict["Ttt1dlist"] = Ttt1dlist
+    return outdict
+
+
 def plot_compare(filename):
     # Read in data first
     print("working on", filename)
@@ -80,7 +99,7 @@ def plot_compare(filename):
     mu = spt.mean_molecular_weight(imf.HI, imf.HII, imf.HeI, imf.HeII, imf.HeIII)
     data.gas.T = spt.gas_temperature(data.gas.internal_energies, mu, gamma)
 
-    outdict = spt.get_TT1Dsolution()
+    outdict = get_TT1Dsolution()
 
     fig, ax = plt.subplots(1, 2)
 
