@@ -21,7 +21,7 @@ TimeIntegration:
 Snapshots:
   basename:            output_MF # Common part of the name of output files
   time_first:          0.     # Time of the first output (in internal units)
-  delta_time:          0.001 # Time between snapshots
+  delta_time:          0.0102 # Time between snapshots
 
 # Parameters governing the conserved quantities statistics
 Statistics:
@@ -70,7 +70,7 @@ SPHM1RT:
   use_const_emission_rates: 1                         # (Optional) use constant emission rates for stars as defined with star_emission_rates parameter 
   star_emission_rates: [1e-32, 1.05e11, 2.16e11, 4.80e10]     # (Optional) constant star emission rates (internal unit: energy/time) for each photon frequency group to use if use_constant_emission_rates is set. # = 5e48 photons/sec and BB1e5
   stellar_spectrum_type: 1                            # Which radiation spectrum to use. 0: constant from 0 until some max frequency set by stellar_spectrum_const_max_frequency_Hz. 1: blackbody spectrum.
-  stars_max_timestep: 7.812500e-06                    # (Optional) restrict the maximal timestep of stars to this value (in internal units). Set to negative to turn off.
+  stars_max_timestep: 1.5625e-05                      # (Optional) restrict the maximal timestep of stars to this value (in internal units). Set to negative to turn off.
   stellar_spectrum_blackbody_temperature_K: 1.e5      # (Conditional) if stellar_spectrum_type=1, use this temperature (in K) for the blackbody spectrum. 
   skip_thermochemistry: 0                             # (Optional) skip the thermochemistry. This is intended only for debugging and testing the radiation transport, as it breaks the purpose of RT.
   init_mass_fraction_metal:     0.                    # (Optional) Inital mass fraction of particle mass in *all* metals (if it is set, the initial fraction will be over-written.)

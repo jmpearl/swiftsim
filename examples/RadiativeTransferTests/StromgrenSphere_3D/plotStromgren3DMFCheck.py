@@ -40,7 +40,6 @@ params = {
     "lines.linewidth": 2.0,
 }
 mpl.rcParams.update(params)
-mpl.rc("font", **{"family": "sans-serif", "sans-serif": ["Times"]})
 
 scatterplot_kwargs = {
     "alpha": 0.6,

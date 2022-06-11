@@ -25,4 +25,4 @@ fi
 # mpirun -np 2 ../../swift_mpi --hydro --threads=14 --stars --external-gravity --feedback --radiation stromgrenSphere-3D-MF.yml 2>&1 | tee output.log
 
 # Plot the Stromgren 3D multifrequency checks.
-python3 ./plotStromgren3DMFCheck.py 102
+python3 ./plotStromgren3DMFCheck.py 10

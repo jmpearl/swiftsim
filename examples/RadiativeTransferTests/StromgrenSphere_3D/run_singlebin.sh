@@ -25,4 +25,4 @@ fi
 # mpirun -np 2 ../../swift_mpi --hydro --threads=14 --stars --external-gravity --feedback --radiation stromgrenSphere-3D-singlebin.yml 2>&1 | tee output.log
 
 # Plot the Stromgren 3D single frequency checks.
-python3 ./plotStromgren3DsinglebinCheck.py 500
+python3 ./plotStromgren3DsinglebinCheck.py 50
