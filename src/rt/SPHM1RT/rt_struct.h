@@ -82,11 +82,8 @@ struct rt_part_data {
     /*! initial mean opacity */
     float chi[RT_NGROUPS];
 
-    /*! reduced speed of light */
+    /*! reduced speed of light (comoving) */
     float cred;
-
-    /*! reduced speed of light (physical) */
-    float cred_phys;
 
   } params;
 

@@ -269,6 +269,8 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
       if (finish_abundances[spec] > 0.f) {
         if (finish_abundances[spec] < FLT_MAX) {
           rpd->tchem.abundances[spec] = (float)(finish_abundances[spec]);
+        } else {
+          error("finish_abundances larger than FLT_MAX"); 
         }
       } else {
         rpd->tchem.abundances[spec] = 0.f;
@@ -455,6 +457,8 @@ void rt_do_thermochemistry(struct part* restrict p, struct xpart* restrict xp,
       if (finish_abundances[spec] > 0.f) {
         if (finish_abundances[spec] < FLT_MAX) {
           rpd->tchem.abundances[spec] = (float)(finish_abundances[spec]);
+        } else {
+          error("finish_abundances larger than FLT_MAX"); 
         }
       } else {
         rpd->tchem.abundances[spec] = 0.f;
