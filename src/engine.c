@@ -3416,6 +3416,7 @@ void engine_clean(struct engine *e, const int fof, const int restart) {
   /* If the run was restarted, we should also free the memory allocated
      in engine_struct_restore() */
   if (restart) {
+    free((void *)e->reparttype);
     free((void *)e->parameter_file);
     free((void *)e->output_options);
     free((void *)e->external_potential);
@@ -3469,9 +3470,12 @@ void engine_clean(struct engine *e, const int fof, const int restart) {
 void engine_struct_dump(struct engine *e, FILE *stream) {
 
   /* Dump the engine. Save the current tasks_per_cell estimate. */
+  struct repartition *old_reparttype = e->reparttype;
   e->restart_max_tasks = engine_estimate_nr_tasks(e);
+  e->reparttype = NULL;
   restart_write_blocks(e, sizeof(struct engine), 1, stream, "engine",
                        "engine struct");
+  e->reparttype = old_reparttype;
 
   /* And all the engine pointed data, these use their own dump functions. */
   space_struct_dump(e->s, stream);

@@ -195,6 +195,7 @@ void engine_config(int restart, int fof, struct engine *e,
   /* Allow repartitioning to be changed between restarts. On restart this is
    * already allocated and freed on exit, so we need to copy over. */
   if (restart) {
+    e->reparttype = (struct repartition*) malloc(sizeof(struct repartition));
     memcpy(e->reparttype, reparttype, sizeof(struct repartition));
   } else {
     e->reparttype = reparttype;
