@@ -333,7 +333,9 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
       params, "SPHM1RT:ionizing_photon_energy_erg", 3,
       rtp->ionizing_photon_energy_cgs);
   if (errorint == 0) {
-    message("SPHM1RT:ionizing_photon_energy_erg not found in params, using default values");
+    message(
+        "SPHM1RT:ionizing_photon_energy_erg not found in params, using default "
+        "values");
     /* assume blackbody 1e5K spectrum */
     rtp->ionizing_photon_energy_cgs[0] = 3.0208e-11;
     rtp->ionizing_photon_energy_cgs[1] = 5.61973e-11;
@@ -359,7 +361,8 @@ __attribute__((always_inline)) INLINE static void rt_props_init(
   errorint = parser_get_opt_param_float_array(
       params, "SPHM1RT:Fgamma_fixed_cgs", 3, rtp->Fgamma_fixed_cgs);
   if (errorint == 0) {
-    message("SPHM1RT:Fgamma_fixed_cgs not found in params, using default values");
+    message(
+        "SPHM1RT:Fgamma_fixed_cgs not found in params, using default values");
     for (int ibin = 0; ibin < 3; ibin++) {
       rtp->Fgamma_fixed_cgs[ibin] = -1.0;
     }

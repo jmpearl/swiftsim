@@ -78,8 +78,7 @@ __attribute__((always_inline)) INLINE static void rt_reset_part(
  * @param rt_props RT properties struct
  */
 __attribute__((always_inline)) INLINE static void rt_first_init_part(
-    struct part* restrict p, 
-    const struct cosmology *cosmo,
+    struct part* restrict p, const struct cosmology* cosmo,
     const struct rt_props* restrict rt_props) {}
 
 /**
